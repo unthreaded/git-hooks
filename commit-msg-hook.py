@@ -1,6 +1,7 @@
 import os
+from pygit2 import Repository
 
 def commit_msg():
-    print("hello")
+    print(Repository('.').head.shorthand)
 
 commit_msg()
