@@ -2,7 +2,6 @@ branch=$(git branch | egrep '\*' | sed 's/\* //g')
 currentCommitMessage=$(head -n 1 $1)
 repoUrl=$(git config --get remote.origin.url | sed "s/....$//" | awk '{print $1"/issues/"}')
 
-finalCommitMessage=$(python commit-msg-hook.py $branch "$currentCommitMessage" $repoUrl)
-echo $finalCommitMessage > $1
+python commit-msg-hook.py $branch "$currentCommitMessage" $repoUrl
 
 exit 0
