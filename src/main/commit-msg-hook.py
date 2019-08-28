@@ -6,7 +6,6 @@ import re
 import sys
 
 
-
 def commit_msg():
     BRANCH = sys.argv[1]
     COMMIT_MSG = sys.argv[2]
