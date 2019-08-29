@@ -10,6 +10,8 @@ script:
   - pylint --disable=C0111 src/test
   # Run all tests
   - pytest
+  # Package
+  - pyinstaller --onefile src/main/commit_msg_hook.py --name commit_msg.exe
 after_success:
   - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
   - chmod +x send.sh
