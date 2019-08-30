@@ -8,14 +8,15 @@ script:
   - pylint src/main/
   # Lint step 2 (Disable docstring requirements)
   - pylint --disable=C0111 src/test
-  # Run all tests
-  - pytest
+  # Run all tests and include coverage
+  - pytest --cov=./
   # Package
   - pyinstaller --onefile src/main/commit_msg_hook.py --name commit_msg.exe
 after_success:
   - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
   - chmod +x send.sh
   - ./send.sh success $WEBHOOK_URL
+  - codecov
 after_failure:
   - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
   - chmod +x send.sh
