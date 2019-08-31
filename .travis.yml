@@ -4,10 +4,8 @@ python:
 install:
   - pip install -r requirements.txt
 script:
-  # Lint step 1
-  - pylint src/main/
-  # Lint step 2 (Disable docstring requirements)
-  - pylint --disable=C0111 src/test
+  - chmod +x scripts/*
+  - scripts/lint.sh
   # Run all tests and include coverage
   - pytest --cov=./
   # Package
