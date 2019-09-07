@@ -7,7 +7,7 @@ script:
   - chmod +x scripts/*
   - scripts/lint.sh
   # Run all tests and include coverage
-  - pytest --cov=./
+  - pytest --cov=src/main/
   # Package
   - pyinstaller --onefile src/main/commit_msg_hook.py --name commit_msg.exe
 after_success:
