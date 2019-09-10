@@ -27,3 +27,9 @@ class CommitHookConfig(ABC):
         """
             Returns zero or more branch prefixes that should NOT be touched
         """
+
+    @abstractmethod
+    def get_issue_url_prefix(self) -> str:
+        """
+            Returns the prefix to link to an issue
+        """

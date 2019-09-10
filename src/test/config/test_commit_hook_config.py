@@ -21,3 +21,6 @@ class TestCommitHookConfig(unittest.TestCase):
 
     def test_get_no_issue_phrase(self):
         self.assertIsNotNone(self.sut.get_no_issue_phrase(), msg="Should return a no issue phrase")
+
+    def test_issue_url_prefix(self):
+        self.assertIsNotNone(self.sut.get_issue_url_prefix(), msg="Should return issue URL prefix")
