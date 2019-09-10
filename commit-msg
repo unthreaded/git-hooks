@@ -1,7 +1,4 @@
-branch=$(git branch | egrep '\*' | sed 's/\* //g')
-currentCommitMessage=$(head -n 1 $1)
-repoUrl=$(git config --get remote.origin.url | sed "s/....$//" | awk '{print $1"/issues/"}')
+#!/bin/bash
 
-python commit-msg-hook.py $branch "$currentCommitMessage" $repoUrl
-
-exit 0
+COMMIT_FILE_FROM_GIT=$1
+./commit_msg.exe commit-msg-hook.py $(pwd) "$COMMIT_FILE_FROM_GIT"
