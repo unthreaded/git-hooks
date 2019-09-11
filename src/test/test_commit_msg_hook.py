@@ -19,4 +19,4 @@ class TestCommitMsgHook(unittest.TestCase):
                 commit_msg_hook.exit = mock_exit
                 commit_msg_hook.main()
 
-                mock_exit.assert_called_once_with(commit_msg_hook.ExitCodes.FAILURE)
+                mock_exit.assert_called_once_with(commit_msg_hook.ExitCode.FAILURE)
