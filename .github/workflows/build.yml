@@ -29,3 +29,7 @@ jobs:
     - name: Package
       run: |
         pyinstaller --onefile src/main/commit_msg_hook.py --name commit_msg.exe
+    - uses: actions/upload-artifact@master
+      with:
+        name: Pyinstaller EXE
+        path: dist/commit_msg.exe
