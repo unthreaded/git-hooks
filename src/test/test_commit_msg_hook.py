@@ -1,14 +1,22 @@
 import unittest
+from unittest.mock import patch, Mock
+from src.main import commit_msg_hook
 
 
-class TestCommitHook(unittest.TestCase):
+class TestCommitMsgHook(unittest.TestCase):
+    def test_incorrect_command_line_args(self):
+        """
+            When we receive the incorrect number of command line arguments,
+             we should exit with FAILURE
+        """
 
-    def test_dummy_starter_1(self):
-        self.assertTrue((2 - 1) == 1)
+        # Setup an array with one too many arguments
+        mock_args = ["arg"] * (commit_msg_hook.NUM_ARGUMENTS_EXPECTED + 1)
 
-    def test_dummy_starter_2(self):
-        self.assertFalse(1 == 2)
+        with patch("sys.argv", mock_args):
+            with patch.object(commit_msg_hook, "__name__", "__main__"):
+                mock_exit = Mock(name="exit")
+                commit_msg_hook.exit = mock_exit
+                commit_msg_hook.main()
 
-
-if __name__ == '__main__':
-    unittest.main()
+                mock_exit.assert_called_once_with(commit_msg_hook.ExitCode.FAILURE)
