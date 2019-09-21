@@ -33,3 +33,13 @@ jobs:
       with:
         name: Pyinstaller EXE
         path: dist/commit_msg.exe
+    - name: Send Webhook Notification
+      if: always()
+      env:
+        JOB_STATUS: ${{ job.status }}
+        WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+      run: |
+        echo Status: $JOB_STATUS
+        wget https://raw.githubusercontent.com/unthreaded/github-actions-discord-webhook/master/send.sh
+        chmod +x send.sh
+        ./send.sh $JOB_STATUS $WEBHOOK_URL
