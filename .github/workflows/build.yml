@@ -28,11 +28,11 @@ jobs:
         pytest --doctest-modules --cov=src/main/
     - name: Package
       run: |
-        pyinstaller --onefile src/main/commit_msg_hook.py --name commit_msg.exe
+        python scripts/package.py
     - uses: actions/upload-artifact@master
       with:
         name: Pyinstaller EXE
-        path: dist/commit_msg.exe
+        path: dist/*.exe
     - name: Send Webhook Notification
       if: always()
       env:
