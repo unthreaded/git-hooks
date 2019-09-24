@@ -48,3 +48,4 @@ jobs:
         wget https://raw.githubusercontent.com/unthreaded/github-actions-discord-webhook/master/send.sh
         chmod +x send.sh
         ./send.sh $JOB_STATUS $WEBHOOK_URL
+      shell: bash
