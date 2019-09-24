@@ -27,6 +27,7 @@ jobs:
     - name: Lint
       run: |
         scripts/lint.sh
+      shell: bash
     - name: Test
       run: |
         pytest --doctest-modules --cov=src/main/
