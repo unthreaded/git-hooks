@@ -38,6 +38,10 @@ jobs:
       with:
         name: Pyinstaller EXE
         path: dist/
+    - name: Download Webhook
+      uses: wei/wget@v1
+      with:
+        args: https://raw.githubusercontent.com/unthreaded/github-actions-discord-webhook/master/send.sh
     - name: Send Webhook Notification
       if: always()
       env:
@@ -45,7 +49,4 @@ jobs:
         WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
       run: |
         echo Status: $JOB_STATUS
-        wget https://raw.githubusercontent.com/unthreaded/github-actions-discord-webhook/master/send.sh
-        chmod +x send.sh
-        ./send.sh $JOB_STATUS $WEBHOOK_URL
-      shell: bash
+        bash send.sh $JOB_STATUS $WEBHOOK_URL
