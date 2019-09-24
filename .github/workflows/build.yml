@@ -33,10 +33,13 @@ jobs:
     - name: Package
       run: |
         python scripts/package.py
+    - name: Publish
+      env:
+        PACKAGED_EXE: $(ls dist/*.exe)
     - uses: actions/upload-artifact@master
       with:
         name: Pyinstaller EXE
-        path: $(ls dist/*.exe)
+        path: $PACKAGED_EXE
     - name: Send Webhook Notification
       if: always()
       env:
