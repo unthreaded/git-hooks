@@ -32,7 +32,7 @@ jobs:
       shell: bash
     - name: Test
       run: |
-        pytest --doctest-modules --cov=src/main/
+        pytest --doctest-modules --cov=src/main/ --cov-report=xml
     - name: Package
       run: |
         python scripts/package.py
@@ -44,6 +44,8 @@ jobs:
       if: runner.os == 'Linux'
       with:
         token: ${{secrets.CODECOV_TOKEN}}
+        file: ./coverage.xml
+        flags: unittests
         name: codecov-umbrella
     - name: Send Webhook Notification
       if: always()
