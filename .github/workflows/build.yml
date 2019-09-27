@@ -5,7 +5,11 @@ on: [push, pull_request]
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macOS-latest, windows-latest]
 
     steps:
     - uses: actions/checkout@v1
@@ -15,21 +19,42 @@ jobs:
         python-version: 3.7
     - name: Install dependencies
       run: |
+        python scripts/os_specific_requirements.py
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+      shell: bash
     - name: Prepare Scripts
       run: |
         chmod +x scripts/*
     - name: Lint
       run: |
         scripts/lint.sh
+      shell: bash
     - name: Test
       run: |
-        pytest --doctest-modules --cov=src/main/
+        pytest --doctest-modules --cov=src/main/ --cov-report=xml
     - name: Package
       run: |
-        pyinstaller --onefile src/main/commit_msg_hook.py --name commit_msg.exe
+        python scripts/package.py
     - uses: actions/upload-artifact@master
       with:
         name: Pyinstaller EXE
-        path: dist/commit_msg.exe
+        path: dist/
+    - name: Upload code covergae to codecov
+      if: runner.os == 'Linux'
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      run: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN  -f coverage.xml
+    - name: Send Webhook Notification
+      if: always()
+      env:
+        JOB_STATUS: ${{ job.status }}
+        WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+        HOOK_OS_NAME: ${{ runner.os }}
+        WORKFLOW_NAME: ${{ github.workflow }}
+        WEBHOOK_REPO: ${{ secrets.WEBHOOK_REPO }}
+      run: |
+        echo Status: $JOB_STATUS
+        git clone $WEBHOOK_REPO webhook
+        bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL
+      shell: bash
