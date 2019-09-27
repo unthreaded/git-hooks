@@ -40,13 +40,11 @@ jobs:
       with:
         name: Pyinstaller EXE
         path: dist/
-    - uses: codecov/codecov-action@v1.0.2
+    - name: Upload code covergae to codecov
       if: runner.os == 'Linux'
-      with:
-        token: ${{secrets.CODECOV_TOKEN}}
-        file: ./coverage.xml
-        flags: unittests
-        name: codecov-umbrella
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      run: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN  -f coverage.xml
     - name: Send Webhook Notification
       if: always()
       env:
