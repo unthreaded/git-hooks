@@ -45,6 +45,7 @@ jobs:
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN  -f coverage.xml
+    - uses: actions/setup-ruby@v1
     - name: Send Webhook Notification
       if: always()
       env:
