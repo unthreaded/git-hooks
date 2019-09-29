@@ -1,0 +1,13 @@
+codecov:
+  branch: master
+coverage:
+  status:
+    project:
+      default:
+        target: 90
+        threshold: 0.09
+  notify:
+    slack:
+      default:
+        url: "secret:hHDcS/Ml2N4+nP3Bf9DYuf5sy2cryh0rEkWAHKuZ0OMZZmYvWI4vdV0ihDypMrZ2GkOplHLg0PyPiefOR1yqKmnQBcAyWPWNz6v4zmRIHJLqGltNl1Eox/fSQUpzLE/a+MOXshBEVM6mchsfUNZK4JTHIxpQ/GNMy6tdI+ZS8Sctm3d3hHSsvH2SGCY9ydbG7H1WhYLzoTu65H2PIB0YVPsx1KnEHgKWHS3QH+UbCyc="
+comment: off
