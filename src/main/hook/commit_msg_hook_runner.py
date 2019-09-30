@@ -69,13 +69,12 @@ class CommitMessageHookRunner:
             logging.info("Merging or Reverting, will not change commit message.")
             return ExitCode.SUCCESS
 
-        if any(
-                re.findall(self.hook_config.get_protected_branch_prefixes(),
-                           branch_name,
-                           re.IGNORECASE)
-        ):
-            logging.error("You just committed to an exempt branch! ( %s )", branch_name)
-            return ExitCode.SUCCESS
+        for branch_prefix in self.hook_config.get_protected_branch_prefixes():
+            if re.search(branch_prefix,
+                         branch_name,
+                         re.IGNORECASE):
+                logging.error("You just committed to an exempt branch! ( %s )", branch_name)
+                return ExitCode.SUCCESS
 
         if not any(re.findall(issue_pattern + ": .*", commit_msg_text)):
             is_commit_compliant = False
