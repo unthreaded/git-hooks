@@ -65,7 +65,8 @@ class CommitMessageHookRunner:
         commit_msg_file = open(os.path.join(self.git_repo_path, self.git_commit_message_path), 'w')
         commit_msg_text = commit_msg_file.read()
 
-        if any(get_left_most_issue_in_string(issue_pattern, commit_msg_text)):
+        lower_commit_text = commit_msg_text.lower()
+        if lower_commit_text.startswith("revert") or lower_commit_text.startswith("merge"):
             logging.info("Merging or Reverting, will not change commit message.")
             return ExitCode.SUCCESS
 
