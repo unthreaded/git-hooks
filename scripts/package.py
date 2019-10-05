@@ -10,6 +10,7 @@ if OS_PREFIX == "darwin":
 
 PyInstaller.__main__.run([
     "--onefile",
+    "--hidden-import=_cffi_backend",
     "--name=%s" % "commit_msg_%s.exe" % OS_PREFIX,
     os.path.join("src", "main", "commit_msg_hook.py"),
 ])
