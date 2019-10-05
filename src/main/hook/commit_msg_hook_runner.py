@@ -62,8 +62,9 @@ class CommitMessageHookRunner:
 
         repo = Repository(self.git_repo_path)
         branch_name = repo.head.name
-        commit_msg_file = open(os.path.join(self.git_repo_path, self.git_commit_message_path), 'w')
-        commit_msg_text = commit_msg_file.read()
+
+        commit_msg_file_path: str = os.path.join(self.git_repo_path, self.git_commit_message_path)
+        commit_msg_text = open(commit_msg_file_path, 'r').read()
 
         lower_commit_text = commit_msg_text.lower()
         if lower_commit_text.startswith("revert") or lower_commit_text.startswith("merge"):
@@ -99,11 +100,13 @@ class CommitMessageHookRunner:
             return ExitCode.SUCCESS
 
         issue_num = get_left_most_issue_in_string(issue_pattern, branch_name)
-        final_commit_msg = "%s: %s" % (issue, commit_msg_text)
+        commit_msg_text = "%s: %s" % (issue, commit_msg_text)
         if issue != self.hook_config.get_no_issue_phrase():
             issue = self.hook_config.get_issue_url_prefix() + issue_num
         logging.info("Rewriting commit to use issue: %s", issue)
 
-        commit_msg_file.write(final_commit_msg)
+        # Open file for write, which will empty the file contents
+        commit_msg_file = open(commit_msg_file_path, 'w')
+        commit_msg_file.write(commit_msg_text)
         commit_msg_file.close()
         return ExitCode.SUCCESS
