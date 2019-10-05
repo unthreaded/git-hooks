@@ -1,3 +1,6 @@
+"""
+    Anything our build needs to do for a specific OS goes here
+"""
 import os
 import platform
 

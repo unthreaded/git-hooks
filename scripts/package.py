@@ -1,3 +1,6 @@
+"""
+    Generate OS specific executable
+"""
 import os
 import platform
 
@@ -8,6 +11,7 @@ OS_PREFIX: str = platform.system().lower()
 if OS_PREFIX == "darwin":
     OS_PREFIX = "mac"
 
+# Hidden import mends PyInstaller moduleNotFound errors
 PyInstaller.__main__.run([
     "--onefile",
     "--hidden-import=_cffi_backend",
