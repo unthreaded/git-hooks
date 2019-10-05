@@ -26,5 +26,6 @@ if __name__ == "__main__":
     ])
 
     # Remove file extension from executable
-    FINAL_EXE_PATH = os.path.join(EXE_FILE_FOLDER, EXE_NAME)
-    os.rename(FINAL_EXE_PATH + ".exe", FINAL_EXE_PATH)
+    if OS_PREFIX == "windows":
+        FINAL_EXE_PATH = os.path.join(EXE_FILE_FOLDER, EXE_NAME)
+        os.rename(FINAL_EXE_PATH + ".exe", FINAL_EXE_PATH)
