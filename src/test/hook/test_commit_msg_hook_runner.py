@@ -1,11 +1,11 @@
-import unittest
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, MagicMock
 
 from src.main.config.commit_hook_config import CommitHookConfig
 from src.main.hook.commit_msg_hook_runner import CommitMessageHookRunner
+from src.test.base_unit_test import BaseUnitTest
 
 
-class TestCommitMessageRunner(unittest.TestCase):
+class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
     sut: CommitMessageHookRunner = None
 
     repo_path = "/example/whatever/folder/path/"
@@ -14,12 +14,6 @@ class TestCommitMessageRunner(unittest.TestCase):
     message_written_to_commit_file: str = None
     mock_commit_file: Mock
     mock_repo: MagicMock
-
-    def create_patch(self, name: str):
-        patcher = patch(name)
-        mock_value = patcher.start()
-        self.addCleanup(patcher.stop)
-        return mock_value
 
     def setUp(self):
         self.sut = CommitMessageHookRunner(self.repo_path, self.commit_msg_path, self.config)
