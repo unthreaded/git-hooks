@@ -62,25 +62,26 @@ class CommitMessageHookRunner:
 
         repo = Repository(self.git_repo_path)
         branch_name = repo.head.name
-        commit_msg_file = open(os.path.join(self.git_repo_path, self.git_commit_message_path), 'w')
-        commit_msg_text = commit_msg_file.read()
 
-        if any(get_left_most_issue_in_string(issue_pattern, commit_msg_text)):
+        commit_msg_file_path: str = os.path.join(self.git_repo_path, self.git_commit_message_path)
+        commit_msg_text = open(commit_msg_file_path, 'r').read()
+
+        lower_commit_text = commit_msg_text.lower()
+        if lower_commit_text.startswith("revert") or lower_commit_text.startswith("merge"):
             logging.info("Merging or Reverting, will not change commit message.")
             return ExitCode.SUCCESS
 
-        if any(
-                re.findall(self.hook_config.get_protected_branch_prefixes(),
-                           branch_name,
-                           re.IGNORECASE)
-        ):
-            logging.error("You just committed to an exempt branch! ( %s )", branch_name)
-            return ExitCode.SUCCESS
+        for protected_branch_prefix in self.hook_config.get_protected_branch_prefixes():
+            if re.search(protected_branch_prefix,
+                         branch_name,
+                         re.IGNORECASE):
+                logging.error("You just committed to an exempt branch! ( %s )", branch_name)
+                return ExitCode.SUCCESS
 
         if not any(re.findall(issue_pattern + ": .*", commit_msg_text)):
             is_commit_compliant = False
 
-        if not any(get_left_most_issue_in_string(issue_pattern, branch_name)):
+        if not get_left_most_issue_in_string(issue_pattern, branch_name):
             is_branch_non_compliant = True
 
         if is_branch_non_compliant and (not is_commit_compliant):
@@ -99,11 +100,13 @@ class CommitMessageHookRunner:
             return ExitCode.SUCCESS
 
         issue_num = get_left_most_issue_in_string(issue_pattern, branch_name)
-        final_commit_msg = "%s: %s" % (issue, commit_msg_text)
+        commit_msg_text = "%s: %s" % (issue, commit_msg_text)
         if issue != self.hook_config.get_no_issue_phrase():
             issue = self.hook_config.get_issue_url_prefix() + issue_num
         logging.info("Rewriting commit to use issue: %s", issue)
 
-        commit_msg_file.write(final_commit_msg)
+        # Open file for write, which will empty the file contents
+        commit_msg_file = open(commit_msg_file_path, 'w')
+        commit_msg_file.write(commit_msg_text)
         commit_msg_file.close()
         return ExitCode.SUCCESS
