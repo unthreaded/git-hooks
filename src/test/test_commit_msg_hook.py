@@ -34,8 +34,6 @@ class TestCommitMsgHook(BaseUnitTest.BaseTestCase):
     def test_correct_debug_command_line_args(self):
         self.mock_sys.argv = ['Dummy path', sut.DEBUG_FLAG, "X", "Y"]
         sut.main()
-
-        # Should exit success
         self.mock_sys.exit.assert_called_once_with(ExitCode.SUCCESS.value)
         self.mock_hook_runner.assert_called_once_with("X", "Y", ANY)
 
@@ -43,7 +41,11 @@ class TestCommitMsgHook(BaseUnitTest.BaseTestCase):
         self.mock_os.getcwd.return_value = "test_value"
         self.mock_sys.argv = ['Dummy path', "VALUE"]
         sut.main()
-
-        # Should exit success
         self.mock_sys.exit.assert_called_once_with(ExitCode.SUCCESS.value)
         self.mock_hook_runner.assert_called_once_with("test_value", "VALUE", ANY)
+
+    def test_no_command_line_args(self):
+        self.mock_sys.argv = []
+        sut.main()
+        self.mock_sys.exit.assert_called_once_with(ExitCode.FAILURE.value)
+        self.mock_hook_runner.assert_not_called()
