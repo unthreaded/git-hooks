@@ -40,7 +40,7 @@ jobs:
       with:
         name: Pyinstaller EXE
         path: dist/
-    - name: Upload code covergae to codecov
+    - name: Upload code coverage to codecov
       if: runner.os == 'Linux'
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
