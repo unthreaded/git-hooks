@@ -13,8 +13,8 @@ METHOD_COULD_BE_FUNCTION=R0201
 
 TOO_FEW_PUBLIC_METHODS=R0903
 
-echo [Step 1] Linting src/main
-pylint --disable=$TOO_FEW_PUBLIC_METHODS src/main/ || fail_lint
+echo [Step 1] Linting src/main \& scripts
+pylint --disable=$TOO_FEW_PUBLIC_METHODS src/main/ scripts || fail_lint
 
 echo [Step 2] Linting src/test
 pylint --disable=$DOCSTRING_REQUIREMENT,$METHOD_COULD_BE_FUNCTION src/test || fail_lint
