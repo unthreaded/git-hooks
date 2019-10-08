@@ -3,6 +3,7 @@
 """
 
 import logging
+import os
 import sys
 
 from src.main.config.commit_hook_config_base_impl import CommitHookConfigDefaultImpl
@@ -24,16 +25,16 @@ def main():
             logging.error("Excepted %s arguments but got %s",
                           NUM_ARGUMENTS_EXPECTED,
                           num_command_line_args)
-            exit(ExitCode.FAILURE)
+            sys.exit(ExitCode.FAILURE.value)
         else:
-            git_repo_path: str = sys.argv[0]
+            git_repo_path: str = os.getcwd()
             git_commit_msg_file_name: str = sys.argv[1]
-            exit(
+            sys.exit(
                 CommitMessageHookRunner(
                     git_repo_path,
                     git_commit_msg_file_name,
                     CommitHookConfigDefaultImpl()
-                ).run()
+                ).run().value
             )
 
 

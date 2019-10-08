@@ -13,7 +13,7 @@ class CommitHookConfigDefaultImpl(CommitHookConfig):
         return "https://github.com/unthreaded/git-hooks/issues/"
 
     def get_issue_pattern(self) -> str:
-        return "GH-[0-9]"
+        return "GH-[0-9]+"
 
     def get_no_issue_phrase(self) -> str:
         return "NOGH"
