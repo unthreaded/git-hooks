@@ -6,12 +6,38 @@ import logging
 import os
 import sys
 
+from src.main.config.commit_hook_config import CommitHookConfig
 from src.main.config.commit_hook_config_base_impl import CommitHookConfigDefaultImpl
+from src.main.config.commit_hook_config_yaml_impl import CommitHookConfigYAMLImpl
 from src.main.hook.commit_msg_hook_runner import CommitMessageHookRunner, ExitCode
 
 NUM_PROD_ARGUMENTS_EXPECTED: int = 2
 NUM_DEBUG_ARGUMENTS_EXPECTED: int = 4
 DEBUG_FLAG: str = "--debug"
+
+
+def get_config() -> CommitHookConfig:
+    """
+        Determine which config implementation to use
+    :return: CommitHookConfig instance
+    """
+    # Command line args contain our current script/exe path
+    my_exe_path: str = sys.argv[0]
+    my_exe_dir = os.path.dirname(my_exe_path)
+    my_exe_dir = os.path.abspath(my_exe_dir)
+    config_file_path = os.path.join(my_exe_dir, CommitHookConfigYAMLImpl.CONFIG_FILE_NAME)
+
+    if os.path.isfile(config_file_path):
+        return CommitHookConfigYAMLImpl(
+            open(
+                config_file_path,
+                'r')
+        )
+
+    logging.info(
+        "Using default config, configuration not found: \n%s",
+        config_file_path)
+    return CommitHookConfigDefaultImpl()
 
 
 def exit_invalid_num_command_line_arguments(expected: int):
@@ -75,7 +101,7 @@ def main():
             CommitMessageHookRunner(
                 git_repo_path,
                 git_commit_msg_file_name,
-                CommitHookConfigDefaultImpl()
+                get_config()
             ).run().value
         )
 

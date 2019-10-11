@@ -42,6 +42,7 @@ class CommitHookConfigYAMLImpl(CommitHookConfig):
             self.__protected_branch_prefixes = \
                 config_dict[self.YAMLKeys.PROTECTED_BRANCH_PREFIXES]
 
+            config_file.close()
         else:
             raise Exception("File object cannot be none")
         super().__init__()
