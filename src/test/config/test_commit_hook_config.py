@@ -60,3 +60,8 @@ class TestYAMLImplCommitHookConfig(unittest.TestCase):
             self.sut.get_issue_url_prefix(),
             'https://github.com/unthreaded/git-hooks/issues/',
             msg="Found incorrect issue URL prefix")
+
+    def test_exception_raised_with_null_file(self):
+        # We expect Exception class to be thrown when
+        # we call the Yaml impl constructor with an argument of None
+        self.assertRaises(Exception, CommitHookConfigYAMLImpl, None)
