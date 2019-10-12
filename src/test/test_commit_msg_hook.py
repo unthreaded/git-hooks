@@ -20,6 +20,9 @@ class TestCommitMsgHook(BaseUnitTest.BaseTestCase):
         self.mock_sys = self.create_patch(self.SUT_PATCH + ".sys")
         self.mock_os = self.create_patch(self.SUT_PATCH + ".os")
 
+        self.create_patch(self.SUT_PATCH + ".CommitHookConfigYAMLImpl")
+        self.create_patch('builtins.open')
+
     def test_incorrect_prod_command_line_args(self):
         # Setup an array with one too many arguments
         self.mock_sys.argv = ["arg"] * (sut.NUM_PROD_ARGUMENTS_EXPECTED + 1)
