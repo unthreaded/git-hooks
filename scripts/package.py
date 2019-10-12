@@ -14,7 +14,7 @@ if __name__ == "__main__":
     if OS_PREFIX == "darwin":
         OS_PREFIX = "mac"
 
-    EXE_NAME: str = "commit_msg"
+    EXE_NAME: str = "commit-msg"
     EXE_FILE_FOLDER = os.path.join('dist', OS_PREFIX)
 
     # Hidden import mends PyInstaller moduleNotFound errors
