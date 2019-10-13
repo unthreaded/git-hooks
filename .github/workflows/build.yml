@@ -45,9 +45,17 @@ jobs:
       if: runner.os == 'Linux'
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      run: |
-        bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN  -f coverage.xml
-        coveralls
+      run: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN  -f coverage.xml
+    - name: Coveralls Parallel
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        parallel: true
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.github_token }}
+        parallel-finished: true
     - uses: actions/setup-ruby@v1
     - name: Send Webhook Notification
       if: always()
