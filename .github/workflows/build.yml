@@ -22,6 +22,7 @@ jobs:
         python scripts/os_specific_requirements.py
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        pip install coveralls
       shell: bash
     - name: Prepare Scripts
       run: |
@@ -44,7 +45,9 @@ jobs:
       if: runner.os == 'Linux'
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      run: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN  -f coverage.xml
+      run: |
+        bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN  -f coverage.xml
+        coveralls
     - uses: actions/setup-ruby@v1
     - name: Send Webhook Notification
       if: always()
