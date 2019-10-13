@@ -1,10 +1,12 @@
+import os
 import unittest
 
 from src.main.config.commit_hook_config import CommitHookConfig
 from src.main.config.commit_hook_config_base_impl import CommitHookConfigDefaultImpl
+from src.main.config.commit_hook_config_yaml_impl import CommitHookConfigYAMLImpl
 
 
-class TestCommitHookConfig(unittest.TestCase):
+class TestBaseImplCommitHookConfig(unittest.TestCase):
     sut: CommitHookConfig = None
 
     def setUp(self):
@@ -24,3 +26,42 @@ class TestCommitHookConfig(unittest.TestCase):
 
     def test_issue_url_prefix(self):
         self.assertIsNotNone(self.sut.get_issue_url_prefix(), msg="Should return issue URL prefix")
+
+
+class TestYAMLImplCommitHookConfig(unittest.TestCase):
+    sut: CommitHookConfig = None
+
+    def setUp(self):
+        super().setUp()
+        self.sut = CommitHookConfigYAMLImpl(
+            open(os.path.join("src", "main", CommitHookConfigYAMLImpl.CONFIG_FILE_NAME), 'r')
+        )
+
+    def test_protected_branch_prefixes(self):
+        self.assertListEqual(
+            self.sut.get_protected_branch_prefixes(), ['release', 'dev', 'hotfix'],
+            "Branch prefixes don't match"
+        )
+
+    def test_get_issue_pattern(self):
+        self.assertEqual(
+            self.sut.get_issue_pattern(),
+            'GH-[0-9]+',
+            msg="Found incorrect issue pattern")
+
+    def test_get_no_issue_phrase(self):
+        self.assertEqual(
+            self.sut.get_no_issue_phrase(),
+            'NOGH',
+            msg="Found incorrect no issue phrase")
+
+    def test_issue_url_prefix(self):
+        self.assertEqual(
+            self.sut.get_issue_url_prefix(),
+            'https://github.com/unthreaded/git-hooks/issues/',
+            msg="Found incorrect issue URL prefix")
+
+    def test_exception_raised_with_null_file(self):
+        # We expect Exception class to be thrown when
+        # we call the Yaml impl constructor with an argument of None
+        self.assertRaises(Exception, CommitHookConfigYAMLImpl, None)

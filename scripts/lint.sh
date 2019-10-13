@@ -17,5 +17,5 @@ echo [Step 1] Linting src/main \& scripts
 pylint --disable=$TOO_FEW_PUBLIC_METHODS src/main/ scripts || fail_lint
 
 echo [Step 2] Linting src/test
-pylint --disable=$DOCSTRING_REQUIREMENT,$METHOD_COULD_BE_FUNCTION src/test || fail_lint
+pylint --disable=$DOCSTRING_REQUIREMENT,$METHOD_COULD_BE_FUNCTION,$TOO_FEW_PUBLIC_METHODS src/test || fail_lint
 

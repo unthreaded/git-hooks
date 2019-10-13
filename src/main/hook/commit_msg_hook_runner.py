@@ -85,7 +85,10 @@ class CommitMessageHookRunner:
             is_branch_non_compliant = True
 
         if is_branch_non_compliant and (not is_commit_compliant):
-            logging.info("Cannot find ticket in branch name, assuming NOGH: %s", branch_name)
+            logging.info(
+                "Cannot find ticket in branch name, assuming %s: %s",
+                self.hook_config.get_no_issue_phrase(),
+                branch_name)
         else:
             issue = re.findall(issue_pattern, branch_name)[0]
 

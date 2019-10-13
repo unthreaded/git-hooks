@@ -3,9 +3,10 @@
 """
 import os
 import platform
+import sys
+from shutil import copy2 as copy
 
 import PyInstaller.__main__
-
 
 if __name__ == "__main__":
     OS_PREFIX: str = platform.system().lower()
@@ -13,7 +14,7 @@ if __name__ == "__main__":
     if OS_PREFIX == "darwin":
         OS_PREFIX = "mac"
 
-    EXE_NAME: str = "commit_msg"
+    EXE_NAME: str = "commit-msg"
     EXE_FILE_FOLDER = os.path.join('dist', OS_PREFIX)
 
     # Hidden import mends PyInstaller moduleNotFound errors
@@ -28,4 +29,16 @@ if __name__ == "__main__":
     # Remove file extension from executable
     if OS_PREFIX == "windows":
         FINAL_EXE_PATH = os.path.join(EXE_FILE_FOLDER, EXE_NAME)
-        os.rename(FINAL_EXE_PATH + ".exe", FINAL_EXE_PATH)
+        os.replace(FINAL_EXE_PATH + ".exe", FINAL_EXE_PATH)
+
+    # As a work around, we must trick python to make this import happen
+    # otherwise, we'll get:
+    #   ValueError: attempted relative import beyond top-level package
+    sys.path.append(".")
+    from src.main.config.commit_hook_config_yaml_impl import CommitHookConfigYAMLImpl
+
+    CONFIG_FILE_NAME = CommitHookConfigYAMLImpl.CONFIG_FILE_NAME
+
+    # Save config with executable
+    copy(os.path.join("src", "main", CONFIG_FILE_NAME),
+         os.path.join(EXE_FILE_FOLDER, CONFIG_FILE_NAME))
