@@ -14,6 +14,8 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
     message_written_to_commit_file: str
     mock_commit_file: Mock
     mock_repo: MagicMock
+    mock_logging: Mock
+    SUT_PATCH: str = "src.main.hook.commit_msg_hook_runner"
 
     def setUp(self):
         self.sut = CommitMessageHookRunner(self.repo_path, self.commit_msg_path, self.config)
@@ -28,7 +30,8 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
 
         self.mock_open = self.create_patch('builtins.open')
         self.mock_open.return_value = self.mock_commit_file
-        self.mock_repo = self.create_patch("src.main.hook.commit_msg_hook_runner.Repository")
+        self.mock_repo = self.create_patch(self.SUT_PATCH + ".Repository")
+        self.mock_logging = self.create_patch(self.SUT_PATCH + ".logging")
 
         # Setup config information
         self.config.get_issue_pattern.return_value = "TICKET-[0-9]+"
@@ -49,6 +52,12 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
     def set_branch_name(self, branch: str):
         self.mock_repo.return_value.head.name = branch
 
+    def assert_n_calls_made_to_logging(self, num_calls: int):
+        self.assertEqual(
+            num_calls,
+            len(self.mock_logging.method_calls),
+            "Incorrect num calls made to logging")
+
     def test_no_action_taken_on_merge_or_revert(self):
         no_action_commit_messages = ["revert changes from release/V1.2",
                                      "MERGE changes from release/V1.2"]
@@ -62,6 +71,8 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
             self.assertIsNone(self.message_written_to_commit_file,
                               "Nothing should have been written to the commit file")
 
+            self.assert_n_calls_made_to_logging(1)
+
             # Start fresh for next run
             self.setUp()
 
@@ -72,6 +83,7 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
                              "Nothing was written to commit file")
         self.assertTrue(self.message_written_to_commit_file.startswith("TICKET-1234"),
                         "The ticket was not added to the start of the commit message")
+        self.assert_n_calls_made_to_logging(1)
 
     def test_that_nothing_happens_when_issue_is_already_in_commit(self):
         commits_that_should_not_be_edited = [
@@ -89,5 +101,42 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
             self.assertIsNone(self.message_written_to_commit_file,
                               "Nothing should have been written to commit file")
 
+            self.assert_n_calls_made_to_logging(0)
+
             # Start fresh next time
             self.setUp()
+
+    def test_warning_on_non_matching_issue_numbers(self):
+        self.set_branch_name("feature/TICKET-123")
+        self.set_commit_message("NOTICKET blah blah blah")
+
+        self.sut.run()
+
+        self.assertIsNone(self.message_written_to_commit_file,
+                          "Nothing should have been written to commit file")
+
+        self.assert_n_calls_made_to_logging(1)
+
+    def test_default_issue_going_to_commit_message(self):
+        self.set_branch_name("no-issue-here")
+        self.set_commit_message("blah blah blah")
+
+        self.sut.run()
+
+        self.assert_n_calls_made_to_logging(1)
+
+        self.assertTrue(
+            self.message_written_to_commit_file.startswith(self.config.get_no_issue_phrase()),
+            "The NO ISSUE ticket was not added to the start of the commit message")
+
+    def test_no_changes_to_exempt_branches(self):
+        self.config.get_protected_branch_prefixes.return_value = ["release"]
+        self.set_branch_name("release/version-one")
+        self.set_commit_message("blah blah blah")
+
+        self.sut.run()
+
+        self.assertIsNone(self.message_written_to_commit_file,
+                          "Nothing should have been written to commit file")
+
+        self.assert_n_calls_made_to_logging(1)
