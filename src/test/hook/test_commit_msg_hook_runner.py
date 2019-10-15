@@ -38,7 +38,10 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
 
         # Setup dummy git environment
         self.set_branch_name("feature/TICKET-1234-new-feature")
-        self.set_commit_message("Example commit text")
+        self.set_commit_message("""Example commit text
+        # example comment from get about feature/TICKET-123-whatever
+        # example comment 2 about NOTICKET
+        """)
 
     def set_commit_message(self, message: str):
         self.mock_commit_file.read.return_value = message
