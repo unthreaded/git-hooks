@@ -31,6 +31,12 @@ def get_left_most_issue_in_string(issue_pattern: str, string: str) -> str:
         True
         >>> get_left_most_issue_in_string("ISSUE-[0-9]+", "ISSUE-ISSUE-1234-new-feature")
         'ISSUE-1234'
+        >>> get_left_most_issue_in_string("NOGH", "NOGH | whatever")
+        'NOGH'
+        >>> get_left_most_issue_in_string("NOGH", " NOGH: whatever")
+        'NOGH'
+        >>> get_left_most_issue_in_string("TICKET-[0-9]+|NOGH", "NOGH: something for TICKET-123")
+        'NOGH'
     """
     result = re.search(issue_pattern, string, re.IGNORECASE)
     if result:
@@ -51,6 +57,12 @@ class CommitMessageHookRunner:
         self.git_commit_message_path = git_commit_message_path
         self.hook_config = config
 
+    def get_current_branch_name(self) -> str:
+        """
+        :return: Current branch checked out in repo
+        """
+        return Repository(self.git_repo_path).head.name
+
     def run(self) -> ExitCode:
         """
                 Add the ticket to the git commit message if possible
@@ -60,8 +72,7 @@ class CommitMessageHookRunner:
         is_branch_non_compliant = False
         issue_pattern: str = self.hook_config.get_issue_pattern()
 
-        repo = Repository(self.git_repo_path)
-        branch_name = repo.head.name
+        branch_name = self.get_current_branch_name()
 
         commit_msg_file_path: str = os.path.join(self.git_repo_path, self.git_commit_message_path)
         commit_msg_text = open(commit_msg_file_path, 'r').read()
@@ -78,7 +89,9 @@ class CommitMessageHookRunner:
                 logging.error("You just committed to an exempt branch! ( %s )", branch_name)
                 return ExitCode.SUCCESS
 
-        if not any(re.findall(issue_pattern + ": .*", commit_msg_text)):
+        issue_or_no_issue_pattern: str = \
+            "%s|%s" % (issue_pattern, self.hook_config.get_no_issue_phrase())
+        if not get_left_most_issue_in_string(issue_or_no_issue_pattern, commit_msg_text):
             is_commit_compliant = False
 
         if not get_left_most_issue_in_string(issue_pattern, branch_name):
@@ -90,10 +103,10 @@ class CommitMessageHookRunner:
                 self.hook_config.get_no_issue_phrase(),
                 branch_name)
         else:
-            issue = re.findall(issue_pattern, branch_name)[0]
+            issue = get_left_most_issue_in_string(issue_pattern, branch_name)
 
         if is_commit_compliant:
-            commit_issue = re.findall(issue_pattern, commit_msg_text)[0]
+            commit_issue = get_left_most_issue_in_string(issue_pattern, commit_msg_text)
             if issue != commit_issue:
                 logging.info(
                     "GH issue in commit does not match branch (%s != %s), will not rewrite commit.",
