@@ -1,9 +1,20 @@
 import os
 import shutil
 import stat
-import sys
 import time
 import unittest
+
+
+def enable_write_for_group_and_other(path):
+    os.chmod(path, stat.S_IWRITE or stat.S_IWOTH)
+
+
+def recursive_make_files_writable(path):
+    for root, dirs, files in os.walk(path):
+        for _dir in dirs:
+            enable_write_for_group_and_other(os.path.join(root, _dir))
+        for file in files:
+            enable_write_for_group_and_other(os.path.join(root, file))
 
 
 class TestIntegration(unittest.TestCase):
@@ -20,6 +31,7 @@ class TestIntegration(unittest.TestCase):
         # Remove any existing files in test repo and make empty folder
         self.test_repo_path = "test_repo"
         if os.path.isdir(self.test_repo_path):
+            recursive_make_files_writable(os.path.abspath(self.test_repo_path))
             shutil.rmtree(self.test_repo_path)
         self.assertFalse(os.path.isdir(self.test_repo_path), "Test repo wasn't removed")
         os.mkdir(self.test_repo_path)
@@ -33,13 +45,15 @@ class TestIntegration(unittest.TestCase):
         hooks_folder = os.path.join(".git", "hooks")
         os.makedirs(hooks_folder, exist_ok=True)
         for file_to_copy in os.listdir(self.abs_dist_path):
-            shutil.copy2(os.path.join(self.abs_dist_path, file_to_copy), os.path.join(hooks_folder, file_to_copy))
+            shutil.copy2(
+                os.path.join(self.abs_dist_path, file_to_copy),
+                os.path.join(hooks_folder, file_to_copy))
 
         # Tell git to use our hook
         os.system("git config core.hooksPath " + os.path.abspath(hooks_folder))
 
         # Make hook executable
-        os.chmod(os.path.join(hooks_folder, "commit-msg"), stat.S_IEXEC)
+        os.chmod(os.path.join(hooks_folder, "commit-msg"), stat.S_IRWXO or stat.S_IRWXU)
 
     def test_commit_message_is_edited(self):
         file_to_commit_path = "example.txt"
