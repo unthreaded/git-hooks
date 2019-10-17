@@ -52,6 +52,8 @@ class TestIntegration(unittest.TestCase):
 
         # commit file
         commit_message = "added example file"
+        os.system('git config user.name pytest')
+        os.system('git config user.email pytest@integration.com')
         os.system('git commit -m "%s"' % commit_message)
 
         # Give the hook N seconds to run
