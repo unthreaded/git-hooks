@@ -5,16 +5,16 @@ import time
 import unittest
 
 
-def enable_write_for_group_and_other(path):
-    os.chmod(path, stat.S_IWRITE or stat.S_IWOTH)
+def enable_777_for_user_and_other(path):
+    os.chmod(path, stat.S_IRWXO | stat.S_IRWXU)
 
 
 def recursive_make_files_writable(path):
     for root, dirs, files in os.walk(path):
         for _dir in dirs:
-            enable_write_for_group_and_other(os.path.join(root, _dir))
+            enable_777_for_user_and_other(os.path.join(root, _dir))
         for file in files:
-            enable_write_for_group_and_other(os.path.join(root, file))
+            enable_777_for_user_and_other(os.path.join(root, file))
 
 
 class TestIntegration(unittest.TestCase):
@@ -53,7 +53,7 @@ class TestIntegration(unittest.TestCase):
         os.system("git config core.hooksPath " + os.path.abspath(hooks_folder))
 
         # Make hook executable
-        os.chmod(os.path.join(hooks_folder, "commit-msg"), stat.S_IRWXO or stat.S_IRWXU or stat.S_IRWXG)
+        os.chmod(os.path.join(hooks_folder, "commit-msg"),  stat.S_IRWXU | stat.S_IRWXO)
 
     def test_commit_message_is_edited(self):
         file_to_commit_path = "example.txt"
