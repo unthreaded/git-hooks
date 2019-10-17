@@ -45,9 +45,9 @@ In the zip you downloaded from [releases](https://github.com/unthreaded/git-hook
  
 Copy all files from the zip directory of your respective OS to: `~/.githooks`
 
-On Linux & Mac, make the hooks executable:
+On Linux & Mac, make the hook executable:
 ```shell script
-chmod +x ~/.githooks/*
+chmod +x ~/.githooks/commit-msg
 ```
 
 Lastly, edit this config file to your liking:
@@ -58,5 +58,6 @@ Lastly, edit this config file to your liking:
 * #### The hook is not being triggered
     * Check your [core.hooksPath](https://git-scm.com/docs/githooks) - this setting can be `--global` or by repository. Check this first.
 * #### The hook is having a runtime error
-    * Please submit an issue [here](https://github.com/unthreaded/git-hooks/issues) with as much detail as possible.
+    * Please submit an issue with the terminal output you received [here](https://github.com/unthreaded/git-hooks/issues) with as much detail as possible.
+    
  
