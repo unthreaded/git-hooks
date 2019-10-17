@@ -11,14 +11,8 @@ class TestIntegration(unittest.TestCase):
     abs_dist_path: str
 
     def setUp(self):
-        """
-            When the pipeline builds the hook,
-            the folder containing the binary will be passed as a command line argument
-        """
-        self.assertEqual(len(sys.argv), 3, "Not enough command line arguments")
-
-        self.abs_dist_path = sys.argv[2]
-        self.assertIsNotNone(self.abs_dist_path, "Did not receive executable path")
+        # Dist should only have one other folder in it - grab that one
+        self.abs_dist_path = os.path.join('dist', os.listdir('dist')[0])
 
         # Convert relative path to absolute
         self.abs_dist_path = os.path.abspath(self.abs_dist_path)
