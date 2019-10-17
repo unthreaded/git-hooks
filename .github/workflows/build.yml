@@ -38,7 +38,7 @@ jobs:
         python scripts/package.py
     - uses: actions/upload-artifact@master
       with:
-        name: Pyinstaller EXE
+        name: githooks
         path: dist/
     - name: Integration
       run: |
