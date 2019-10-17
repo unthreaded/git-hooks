@@ -32,7 +32,13 @@ jobs:
       shell: bash
     - name: Test
       run: |
-        pytest --doctest-modules --cov=src/main/ --cov-report=xml
+        pytest --doctest-modules --cov=src/main/ --cov-report=xml src/test
+    - name: Package
+      run: |
+        python scripts/package.py
+    - name: Integration
+      run: |
+        pytest src/integration
     - name: Package
       run: |
         python scripts/package.py
