@@ -36,16 +36,13 @@ jobs:
     - name: Package
       run: |
         python scripts/package.py
-    - name: Integration
-      run: |
-        pytest src/integration
-    - name: Package
-      run: |
-        python scripts/package.py
     - uses: actions/upload-artifact@master
       with:
         name: Pyinstaller EXE
         path: dist/
+    - name: Integration
+      run: |
+        pytest src/integration
     - name: Upload code coverage to codecov
       if: runner.os == 'Linux'
       env:
