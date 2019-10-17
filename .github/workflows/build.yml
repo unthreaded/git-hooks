@@ -32,14 +32,17 @@ jobs:
       shell: bash
     - name: Test
       run: |
-        pytest --doctest-modules --cov=src/main/ --cov-report=xml
+        pytest --doctest-modules --cov=src/main/ --cov-report=xml src/test
     - name: Package
       run: |
         python scripts/package.py
     - uses: actions/upload-artifact@master
       with:
-        name: Pyinstaller EXE
+        name: githooks
         path: dist/
+    - name: Integration
+      run: |
+        pytest src/integration
     - name: Upload code coverage to codecov
       if: runner.os == 'Linux'
       env:

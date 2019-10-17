@@ -61,7 +61,10 @@ class CommitMessageHookRunner:
         """
         :return: Current branch checked out in repo
         """
-        return Repository(self.git_repo_path).head.name
+        repo = Repository(self.git_repo_path)
+        if repo.head_is_unborn or repo.head_is_detached:
+            return ""
+        return repo.head.name
 
     def run(self) -> ExitCode:
         """
@@ -91,7 +94,7 @@ class CommitMessageHookRunner:
                          branch_name,
                          re.IGNORECASE):
                 logging.error("You just committed to an exempt branch! ( %s )", branch_name)
-                return ExitCode.SUCCESS
+                return ExitCode.FAILURE
 
         # A commit that already has an issue is okay,
         # we just warn the user if it doesn't match the issue in the branch.
