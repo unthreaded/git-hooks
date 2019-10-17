@@ -25,7 +25,7 @@ git checkout -b need-this-yesterday
 git commit -m "PROD FIX"
 ...
 git log -n 1 --format=oneline
-afb126992c7e780939ef9b931f38c2cb0c47f91f (HEAD -> feature/GH-123-example-branch) GH-123: Completed work and unit tests
+75d23ddd3a9bd613dde8bbe447fb6a45c7af0a3b (HEAD -> need-this-yesterday) NOGH: PROD FIX
 ```
 ## How do I install?
 Visit our [releases](https://github.com/unthreaded/git-hooks/releases) to download the most recent binary.
