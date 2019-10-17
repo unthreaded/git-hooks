@@ -31,6 +31,8 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
         self.mock_open = self.create_patch('builtins.open')
         self.mock_open.return_value = self.mock_commit_file
         self.mock_repo = self.create_patch(self.SUT_PATCH + ".Repository")
+        self.mock_repo.return_value.head_is_unborn = False
+        self.mock_repo.return_value.head_is_detached = False
         self.mock_logging = self.create_patch(self.SUT_PATCH + ".logging")
 
         # Setup config information
