@@ -94,7 +94,7 @@ class CommitMessageHookRunner:
                          branch_name,
                          re.IGNORECASE):
                 logging.error("You just committed to an exempt branch! ( %s )", branch_name)
-                return ExitCode.SUCCESS
+                return ExitCode.FAILURE
 
         # A commit that already has an issue is okay,
         # we just warn the user if it doesn't match the issue in the branch.

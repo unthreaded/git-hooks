@@ -1,7 +1,7 @@
 from unittest.mock import Mock, MagicMock
 
 from src.main.config.commit_hook_config import CommitHookConfig
-from src.main.hook.commit_msg_hook_runner import CommitMessageHookRunner
+from src.main.hook.commit_msg_hook_runner import CommitMessageHookRunner, ExitCode
 from src.test.base_unit_test import BaseUnitTest
 
 
@@ -23,6 +23,9 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
     def set_unborn_head_flag(self, boolean: bool):
         self.mock_repo.return_value.head_is_unborn = boolean
 
+    def set_protected_branches(self, branches: list):
+        self.config.get_protected_branch_prefixes.return_value = branches
+
     def setUp(self):
         self.sut = CommitMessageHookRunner(self.repo_path, self.commit_msg_path, self.config)
         self.message_written_to_commit_file = None
@@ -43,7 +46,7 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
 
         # Setup config information
         self.config.get_issue_pattern.return_value = "TICKET-[0-9]+"
-        self.config.get_protected_branch_prefixes.return_value = []
+        self.set_protected_branches([])
         self.config.get_issue_url_prefix.return_value = "com.whatever/"
         self.config.get_no_issue_phrase.return_value = "NOTICKET"
 
@@ -157,3 +160,7 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
         self.set_unborn_head_flag(True)
         self.assertEqual("", self.sut.get_current_branch_name())
 
+    def test_exit_failure_on_protected_branch(self):
+        self.set_protected_branches(['master'])
+        self.set_branch_name('master')
+        self.assertEqual(self.sut.run().value, ExitCode.FAILURE.value)
