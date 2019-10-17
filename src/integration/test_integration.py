@@ -53,7 +53,7 @@ class TestIntegration(unittest.TestCase):
         os.system("git config core.hooksPath " + os.path.abspath(hooks_folder))
 
         # Make hook executable
-        os.chmod(os.path.join(hooks_folder, "commit-msg"), stat.S_IRWXO or stat.S_IRWXU)
+        os.chmod(os.path.join(hooks_folder, "commit-msg"), stat.S_IRWXO or stat.S_IRWXU or stat.S_IRWXG)
 
     def test_commit_message_is_edited(self):
         file_to_commit_path = "example.txt"
