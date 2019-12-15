@@ -31,6 +31,12 @@ def get_left_most_issue_in_string(issue_pattern: str, string: str) -> str:
         True
         >>> get_left_most_issue_in_string("ISSUE-[0-9]+", "ISSUE-ISSUE-1234-new-feature")
         'ISSUE-1234'
+        >>> get_left_most_issue_in_string("NOGH", "NOGH | whatever")
+        'NOGH'
+        >>> get_left_most_issue_in_string("NOGH", " NOGH: whatever")
+        'NOGH'
+        >>> get_left_most_issue_in_string("TICKET-[0-9]+|NOGH", "NOGH: something for TICKET-123")
+        'NOGH'
     """
     result = re.search(issue_pattern, string, re.IGNORECASE)
     if result:
@@ -51,20 +57,32 @@ class CommitMessageHookRunner:
         self.git_commit_message_path = git_commit_message_path
         self.hook_config = config
 
+    def get_current_branch_name(self) -> str:
+        """
+        :return: Current branch checked out in repo
+        """
+        repo = Repository(self.git_repo_path)
+        if repo.head_is_unborn or repo.head_is_detached:
+            return ""
+        return repo.head.name
+
     def run(self) -> ExitCode:
         """
                 Add the ticket to the git commit message if possible
         """
-        issue = self.hook_config.get_no_issue_phrase()
-        is_commit_compliant = True
-        is_branch_non_compliant = False
         issue_pattern: str = self.hook_config.get_issue_pattern()
+        issue_or_no_issue_pattern: str = \
+            "%s|%s" % (issue_pattern, self.hook_config.get_no_issue_phrase())
 
-        repo = Repository(self.git_repo_path)
-        branch_name = repo.head.name
+        branch_name: str = self.get_current_branch_name()
 
         commit_msg_file_path: str = os.path.join(self.git_repo_path, self.git_commit_message_path)
-        commit_msg_text = open(commit_msg_file_path, 'r').read()
+        raw_commit_msg_text: str = open(commit_msg_file_path, 'r').read()
+        commit_msg_text: str = raw_commit_msg_text.splitlines()[0]
+
+        issue_in_branch: str = get_left_most_issue_in_string(issue_pattern, branch_name)
+        issue_in_commit: str = get_left_most_issue_in_string(issue_or_no_issue_pattern,
+                                                             commit_msg_text)
 
         lower_commit_text = commit_msg_text.lower()
         if lower_commit_text.startswith("revert") or lower_commit_text.startswith("merge"):
@@ -76,37 +94,30 @@ class CommitMessageHookRunner:
                          branch_name,
                          re.IGNORECASE):
                 logging.error("You just committed to an exempt branch! ( %s )", branch_name)
-                return ExitCode.SUCCESS
+                return ExitCode.FAILURE
 
-        if not any(re.findall(issue_pattern + ": .*", commit_msg_text)):
-            is_commit_compliant = False
-
-        if not get_left_most_issue_in_string(issue_pattern, branch_name):
-            is_branch_non_compliant = True
-
-        if is_branch_non_compliant and (not is_commit_compliant):
-            logging.info(
-                "Cannot find ticket in branch name, assuming %s: %s",
-                self.hook_config.get_no_issue_phrase(),
-                branch_name)
-        else:
-            issue = re.findall(issue_pattern, branch_name)[0]
-
-        if is_commit_compliant:
-            commit_issue = re.findall(issue_pattern, commit_msg_text)[0]
-            if issue != commit_issue:
+        # A commit that already has an issue is okay,
+        # we just warn the user if it doesn't match the issue in the branch.
+        if issue_in_commit:
+            if issue_in_branch and issue_in_commit != issue_in_branch:
                 logging.info(
-                    "GH issue in commit does not match branch (%s != %s), will not rewrite commit.",
-                    commit_issue,
-                    issue)
-                return ExitCode.SUCCESS
+                    "Issue in commit does not match branch (%s != %s), will not rewrite commit.",
+                    issue_in_commit,
+                    issue_in_branch)
             return ExitCode.SUCCESS
 
-        issue_num = get_left_most_issue_in_string(issue_pattern, branch_name)
-        commit_msg_text = "%s: %s" % (issue, commit_msg_text)
-        if issue != self.hook_config.get_no_issue_phrase():
-            issue = self.hook_config.get_issue_url_prefix() + issue_num
-        logging.info("Rewriting commit to use issue: %s", issue)
+        if issue_in_branch:
+            logging.info("Rewriting commit to use issue: %s%s",
+                         self.hook_config.get_issue_url_prefix(),
+                         issue_in_branch)
+        else:
+            issue_in_branch = self.hook_config.get_no_issue_phrase()
+            logging.info(
+                "Cannot find ticket in branch name, assuming %s: %s",
+                issue_in_branch,
+                branch_name)
+
+        commit_msg_text = "%s: %s" % (issue_in_branch, raw_commit_msg_text)
 
         # Open file for write, which will empty the file contents
         commit_msg_file = open(commit_msg_file_path, 'w')
