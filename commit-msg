@@ -1,4 +1,0 @@
-#!/bin/bash
-
-COMMIT_FILE_FROM_GIT=$1
-./commit_msg.exe commit-msg-hook.py $(pwd) "$COMMIT_FILE_FROM_GIT"
