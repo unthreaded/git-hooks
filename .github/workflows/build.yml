@@ -28,7 +28,7 @@ jobs:
         chmod +x scripts/*
     - name: Lint
       run: |
-        scripts/lint.sh
+        python scripts/lint.py
       shell: bash
     - name: Test
       run: |
