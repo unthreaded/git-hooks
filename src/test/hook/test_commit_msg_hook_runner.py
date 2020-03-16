@@ -170,5 +170,5 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
         self.set_protected_branches(['dev'])
         self.set_branch_name('feature/start-dev-for-amazing-new-stuff')
         self.assertEqual(self.sut.run().value, ExitCode.SUCCESS.value,
-                         "Protected branch should only invoke if current branch begins with prefix, "
-                         "not if contained in current branch")
+                         "Protected branch should only invoke if current branch"
+                         " begins with prefix, not if contained in current branch")
