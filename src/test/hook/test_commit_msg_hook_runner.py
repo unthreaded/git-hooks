@@ -1,3 +1,4 @@
+from typing import List
 from unittest.mock import Mock, MagicMock
 
 from src.main.config.commit_hook_config import CommitHookConfig
@@ -23,7 +24,7 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
     def set_unborn_head_flag(self, boolean: bool):
         self.mock_repo.return_value.head_is_unborn = boolean
 
-    def set_protected_branches(self, branches: list):
+    def set_protected_branches(self, branches: List[str]):
         self.config.get_protected_branch_prefixes.return_value = branches
 
     def setUp(self):
@@ -141,7 +142,7 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
             "The NO ISSUE ticket was not added to the start of the commit message")
 
     def test_no_changes_to_exempt_branches(self):
-        self.config.get_protected_branch_prefixes.return_value = ["release"]
+        self.set_protected_branches(["release"])
         self.set_branch_name("release/version-one")
         self.set_commit_message("blah blah blah")
 
@@ -164,3 +165,10 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
         self.set_protected_branches(['master'])
         self.set_branch_name('master')
         self.assertEqual(self.sut.run().value, ExitCode.FAILURE.value)
+
+    def test_protected_branch_edge_case_does_not_cause_failure(self):
+        self.set_protected_branches(['dev'])
+        self.set_branch_name('feature/start-dev-for-amazing-new-stuff')
+        self.assertEqual(self.sut.run().value, ExitCode.SUCCESS.value,
+                         "Protected branch should only invoke if current branch"
+                         " begins with prefix, not if contained in current branch")
