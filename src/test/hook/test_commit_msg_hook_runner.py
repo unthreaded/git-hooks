@@ -1,9 +1,10 @@
+from typing import List
 from unittest.mock import Mock, MagicMock
 
 from src.main.config.commit_hook_config import CommitHookConfig
 from src.main.hook.commit_msg_hook_runner import CommitMessageHookRunner, ExitCode
 from src.test.base_unit_test import BaseUnitTest
-from typing import List
+
 
 class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
     sut: CommitMessageHookRunner = None
@@ -164,3 +165,10 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
         self.set_protected_branches(['master'])
         self.set_branch_name('master')
         self.assertEqual(self.sut.run().value, ExitCode.FAILURE.value)
+
+    def test_protected_branch_edge_case_does_not_cause_failure(self):
+        self.set_protected_branches(['dev'])
+        self.set_branch_name('feature/start-dev-for-amazing-new-stuff')
+        self.assertEqual(self.sut.run().value, ExitCode.SUCCESS.value,
+                         "Protected branch should only invoke if current branch begins with prefix, "
+                         "not if contained in current branch")

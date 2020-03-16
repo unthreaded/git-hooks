@@ -90,7 +90,7 @@ class CommitMessageHookRunner:
             return ExitCode.SUCCESS
 
         for protected_branch_prefix in self.hook_config.get_protected_branch_prefixes():
-            if re.search(protected_branch_prefix,
+            if re.search(f"^{protected_branch_prefix}",
                          branch_name,
                          re.IGNORECASE):
                 logging.error("You just committed to an exempt branch! ( %s )", branch_name)
