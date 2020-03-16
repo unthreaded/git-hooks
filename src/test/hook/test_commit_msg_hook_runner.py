@@ -3,7 +3,7 @@ from unittest.mock import Mock, MagicMock
 from src.main.config.commit_hook_config import CommitHookConfig
 from src.main.hook.commit_msg_hook_runner import CommitMessageHookRunner, ExitCode
 from src.test.base_unit_test import BaseUnitTest
-
+from typing import List
 
 class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
     sut: CommitMessageHookRunner = None
@@ -23,7 +23,7 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
     def set_unborn_head_flag(self, boolean: bool):
         self.mock_repo.return_value.head_is_unborn = boolean
 
-    def set_protected_branches(self, branches: list):
+    def set_protected_branches(self, branches: List[str]):
         self.config.get_protected_branch_prefixes.return_value = branches
 
     def setUp(self):
@@ -141,7 +141,7 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
             "The NO ISSUE ticket was not added to the start of the commit message")
 
     def test_no_changes_to_exempt_branches(self):
-        self.config.get_protected_branch_prefixes.return_value = ["release"]
+        self.set_protected_branches(["release"])
         self.set_branch_name("release/version-one")
         self.set_commit_message("blah blah blah")
 
