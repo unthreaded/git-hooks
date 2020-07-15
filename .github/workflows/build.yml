@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest, polonium]
+        os: [ubuntu-latest, macOS-latest, windows-latest, self-hosted]
 
     steps:
     - uses: actions/checkout@v1
