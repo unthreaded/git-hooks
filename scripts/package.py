@@ -37,7 +37,6 @@ if __name__ == "__main__":
         print(FINAL_EXE_PATH)
         os.chmod(FINAL_EXE_PATH, 0o744)
 
-
     # As a work around, we must trick python to make this import happen
     # otherwise, we'll get:
     #   ValueError: attempted relative import beyond top-level package
