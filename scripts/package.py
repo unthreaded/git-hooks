@@ -30,6 +30,13 @@ if __name__ == "__main__":
     if OS_PREFIX == "windows":
         FINAL_EXE_PATH = os.path.join(EXE_FILE_FOLDER, EXE_NAME)
         os.replace(FINAL_EXE_PATH + ".exe", FINAL_EXE_PATH)
+    
+    # add executable permission for Unix systems
+    if OS_PREFIX != "windows":
+        FINAL_EXE_PATH = os.path.join(EXE_FILE_FOLDER, EXE_NAME)
+        print(FINAL_EXE_PATH)
+        os.chmod(FINAL_EXE_PATH, 0o744)
+
 
     # As a work around, we must trick python to make this import happen
     # otherwise, we'll get:
