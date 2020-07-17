@@ -5,6 +5,7 @@ import os
 import platform
 import sys
 from shutil import copy2 as copy
+from stat import ST_MODE
 
 import PyInstaller.__main__
 
@@ -35,7 +36,9 @@ if __name__ == "__main__":
     if OS_PREFIX != "windows":
         FINAL_EXE_PATH = os.path.join(EXE_FILE_FOLDER, EXE_NAME)
         print(FINAL_EXE_PATH)
+        print(oct(os.stat(FINAL_EXE_PATH)[ST_MODE]))
         os.chmod(FINAL_EXE_PATH, 0o744)
+        print(oct(os.stat(FINAL_EXE_PATH)[ST_MODE]))
 
     # As a work around, we must trick python to make this import happen
     # otherwise, we'll get:
