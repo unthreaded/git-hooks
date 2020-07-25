@@ -60,9 +60,11 @@ class CommitMessageHookRunner:
         """
         :return: Current branch checked out in repo
         """
-        return str(
-            subprocess.check_output("git branch --show-current".split(), cwd=self.git_repo_path)
+        branch_name = subprocess.check_output(
+            "git branch --show-current".split(),
+            cwd=self.git_repo_path
         )
+        return branch_name.strip().decode("utf-8")
 
     def run(self) -> ExitCode:
         """

@@ -55,7 +55,7 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
         self.mock_commit_file.read.return_value = message
 
     def set_branch_name(self, branch: str):
-        self.mock_branch_name.return_value = branch
+        self.mock_branch_name.return_value = bytes(branch, encoding="utf-8")
 
     def assert_n_calls_made_to_logging(self, num_calls: int):
         self.assertEqual(
