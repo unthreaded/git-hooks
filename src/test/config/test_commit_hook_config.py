@@ -3,7 +3,7 @@ import unittest
 
 from src.main.config.commit_hook_config import CommitHookConfig
 from src.main.config.commit_hook_config_base_impl import CommitHookConfigDefaultImpl
-from src.main.config.commit_hook_config_yaml_impl import CommitHookConfigYAMLImpl
+from src.main.config.commit_hook_config_ini_impl import CommitHookConfigINIImpl
 
 
 class TestBaseImplCommitHookConfig(unittest.TestCase):
@@ -28,13 +28,13 @@ class TestBaseImplCommitHookConfig(unittest.TestCase):
         self.assertIsNotNone(self.sut.get_issue_url_prefix(), msg="Should return issue URL prefix")
 
 
-class TestYAMLImplCommitHookConfig(unittest.TestCase):
+class TestINIImplCommitHookConfig(unittest.TestCase):
     sut: CommitHookConfig = None
 
     def setUp(self):
         super().setUp()
-        self.sut = CommitHookConfigYAMLImpl(
-            open(os.path.join("src", "main", CommitHookConfigYAMLImpl.CONFIG_FILE_NAME), 'r')
+        self.sut = CommitHookConfigINIImpl(
+            open(os.path.join("src", "main", CommitHookConfigINIImpl.CONFIG_FILE_NAME), 'r')
         )
 
     def test_protected_branch_prefixes(self):
@@ -63,5 +63,5 @@ class TestYAMLImplCommitHookConfig(unittest.TestCase):
 
     def test_exception_raised_with_null_file(self):
         # We expect Exception class to be thrown when
-        # we call the Yaml impl constructor with an argument of None
-        self.assertRaises(Exception, CommitHookConfigYAMLImpl, None)
+        # we call the config impl constructor with an argument of None
+        self.assertRaises(Exception, CommitHookConfigINIImpl, None)

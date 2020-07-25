@@ -12,7 +12,7 @@ class TestCommitMsgHook(BaseUnitTest.BaseTestCase):
     mock_hook_runner: Mock
     mock_sys: Mock
     mock_os: Mock
-    mock_yaml_config: Mock
+    mock_config: Mock
     mock_default_config: Mock
     mock_logging: Mock
     SUT_PATCH: str = "src.main.commit_msg_hook"
@@ -24,11 +24,11 @@ class TestCommitMsgHook(BaseUnitTest.BaseTestCase):
         self.mock_sys = self.create_patch(self.SUT_PATCH + ".sys")
         self.mock_os = self.create_patch(self.SUT_PATCH + ".os")
 
-        # When a YAML config implementation is constructed, return our mock
-        self.mock_yaml_config = MagicMock(spec=CommitHookConfig)
+        # When a config implementation is constructed, return our mock
+        self.mock_config = MagicMock(spec=CommitHookConfig)
         self.create_patch(
-            self.SUT_PATCH + ".CommitHookConfigYAMLImpl"
-        ).return_value = self.mock_yaml_config
+            self.SUT_PATCH + ".CommitHookConfigINIImpl"
+        ).return_value = self.mock_config
 
         # When a default config implementation is constructed, return our mock
         self.mock_default_config = MagicMock(spec=CommitHookConfig)
@@ -70,14 +70,14 @@ class TestCommitMsgHook(BaseUnitTest.BaseTestCase):
         self.mock_sys.exit.assert_called_once_with(ExitCode.FAILURE.value)
         self.mock_hook_runner.assert_not_called()
 
-    def test_get_config_with_yaml_config_file(self):
+    def test_get_config_with_ini_config_file(self):
         self.mock_os.path.isfile.return_value = True
         self.assertEqual(
             sut.get_config(),
-            self.mock_yaml_config,
-            "A YAML implementation was not returned")
+            self.mock_config,
+            "A config implementation was not returned")
 
-    def test_get_config_without_yaml_config_file(self):
+    def test_get_config_without_ini_config_file(self):
         self.mock_os.path.isfile.return_value = False
 
         self.assertEqual(
