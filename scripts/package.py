@@ -10,8 +10,8 @@ import PyInstaller.__main__
 
 if __name__ == "__main__":
     # Clean up from previous build
-    rmtree('dist')
-    rmtree('build')
+    rmtree('dist', ignore_errors=True)
+    rmtree('build', ignore_errors=True)
 
     OS_PREFIX: str = platform.system().lower()
 
