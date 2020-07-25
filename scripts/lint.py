@@ -36,4 +36,4 @@ lint([TOO_FEW_PUBLIC_METHODS],
      ])
 
 lint([DOCSTRING_REQUIREMENT, METHOD_COULD_BE_FUNCTION, TOO_FEW_PUBLIC_METHODS],
-     ['src/test/'])
+     ['src/test/', 'src/integration'])
