@@ -55,7 +55,8 @@ class CommitHookConfigINIImpl(CommitHookConfig):
                         config_dict[self.INIKeys.PROTECTED_BRANCH_PREFIXES].split(",")
                     ]
             except Exception as error_thrown:
-                logging.error("Check the format of: %s", config_file.name)
+                logging.error("Check the format of: %s",
+                              config_file.name if "name" in config_file else "unknown")
                 raise error_thrown
         else:
             raise Exception("No configuration file found")

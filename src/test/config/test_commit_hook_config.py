@@ -1,5 +1,7 @@
+import io
 import os
 import unittest
+from configparser import MissingSectionHeaderError
 
 from src.main.config.commit_hook_config import CommitHookConfig
 from src.main.config.commit_hook_config_base_impl import CommitHookConfigDefaultImpl
@@ -65,3 +67,9 @@ class TestINIImplCommitHookConfig(unittest.TestCase):
         # We expect Exception class to be thrown when
         # we call the config impl constructor with an argument of None
         self.assertRaises(Exception, CommitHookConfigINIImpl, None)
+
+    def test_exception_raised_with_bad_file(self):
+        # We expect Exception class to be thrown when
+        # we call the config impl constructor with an argument of None
+        self.assertRaises(MissingSectionHeaderError,
+                          CommitHookConfigINIImpl, io.StringIO("""\nprop = abc"""))
