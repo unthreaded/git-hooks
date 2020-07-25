@@ -4,11 +4,15 @@
 import os
 import platform
 import sys
-from shutil import copy2 as copy
+from shutil import copy2 as copy, rmtree
 
 import PyInstaller.__main__
 
 if __name__ == "__main__":
+    # Clean up from previous build
+    rmtree('dist')
+    rmtree('build')
+
     OS_PREFIX: str = platform.system().lower()
 
     if OS_PREFIX == "darwin":
