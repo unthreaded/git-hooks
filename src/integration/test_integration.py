@@ -68,6 +68,12 @@ class TestIntegration(unittest.TestCase):
         commit_message = "added example file"
         os.system('git config user.name pytest')
         os.system('git config user.email pytest@integration.com')
+
+        os.system('git checkout -b feature/GH-123-awesome-new-thing')
+
+        # Give git a moment to switch branches
+        time.sleep(2)
+
         os.system('git commit -m "%s"' % commit_message)
 
         # Give the hook N seconds to run
@@ -76,5 +82,5 @@ class TestIntegration(unittest.TestCase):
         # Save commit message after hook should have run
         commit_message_after_hook: str = os.popen("git log -n 1 --format=\"%s\"").read()
 
-        self.assertEqual(commit_message_after_hook.strip(), "NOGH: %s" % commit_message,
+        self.assertEqual(commit_message_after_hook.strip(), "GH-123: %s" % commit_message,
                          "Commit message was not edited correctly")
