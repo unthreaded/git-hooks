@@ -2,6 +2,7 @@
     Check codebase for lint violations
 """
 import subprocess
+import sys
 
 DOCSTRING_REQUIREMENT = 'C0111'
 
@@ -26,7 +27,7 @@ def lint(ignore_rules: list, directories: list):
                                check=False).returncode
     if exit_code != 0:
         print("Lint violation found.")
-        exit(exit_code)
+        sys.exit(exit_code)
 
 
 lint([TOO_FEW_PUBLIC_METHODS],
