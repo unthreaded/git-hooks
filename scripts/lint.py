@@ -22,8 +22,8 @@ def lint(ignore_rules: list, directories: list):
 
     exit_code = subprocess.run(['pylint',
                                 f"--disable={ignore_string}"
-                                ] + directories
-                               ).returncode
+                                ] + directories,
+                               check=False).returncode
     if exit_code != 0:
         print("Lint violation found.")
         exit(exit_code)
@@ -31,9 +31,9 @@ def lint(ignore_rules: list, directories: list):
 
 lint([TOO_FEW_PUBLIC_METHODS],
      [
-         'src/main/',
+         'src.main',
          'scripts'
      ])
 
 lint([DOCSTRING_REQUIREMENT, METHOD_COULD_BE_FUNCTION, TOO_FEW_PUBLIC_METHODS],
-     ['src/test/'])
+     ['src.test'])
