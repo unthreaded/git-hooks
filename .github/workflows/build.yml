@@ -36,10 +36,11 @@ jobs:
     - name: Package
       run: |
         python scripts/package.py
-    - uses: actions/upload-artifact@master
+    - uses: tiemonl/upload-artifact@main
       with:
         name: githooks
         path: dist/
+        file-permission: 777
     - name: Integration
       run: |
         pytest src/integration
