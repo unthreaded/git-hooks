@@ -39,7 +39,9 @@ jobs:
         pytest --doctest-modules --cov=src/main/ --cov-report=xml src/test
     - name: Package
       run: |
-        python scripts/package.py
+        python scripts/package.py $ZIP_FILE_NAME
+      env:
+        - ZIP_FILE_NAME: ${{ runner.os }}
     - uses: actions/upload-artifact@master
       with:
         name: githooks
@@ -60,10 +62,11 @@ jobs:
         # This is a personal access token so that we can trigger additional jobs
         # https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#triggering-new-workflows-using-a-personal-access-token
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        FILE_NAME: '${{ runner.os }}.zip'
       with:
         upload_url: 'https://uploads.github.com/repos/${{ github.repository }}/releases/${{ github.ref }}/'
-        asset_path: ./*.zip
-        asset_name: blahblah
+        asset_path: ./$FILE_NAME
+        asset_name: $FILE_NAME
         asset_content_type: application/zip
     - uses: actions/setup-ruby@v1
     - name: Send Webhook Notification
