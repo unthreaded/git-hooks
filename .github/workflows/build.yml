@@ -3,6 +3,7 @@ name: Git hooks Pipeline
 on:
   push:
     branches: '**'
+    tags: '**'
   pull_request:
     branches: '**'
   release:
