@@ -63,8 +63,10 @@ jobs:
         # https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#triggering-new-workflows-using-a-personal-access-token
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         FILE_NAME: '${{ runner.os }}.zip'
-        ASSET_PATH: './$FILE_NAME'
-        UPLOAD_URL: 'https://uploads.github.com/repos/${{ github.repository }}/releases/${{ github.ref }}/'
+        ASSET_PATH: "./$FILE_NAME"
+        REPO: ${{ github.repository }}
+        REF: ${{ github.ref }}
+        UPLOAD_URL: "https://uploads.github.com/repos/$REPO/releases/$REF/"
       with:
         asset_content_type: application/zip
         asset_name: ${{ env.FILE_NAME }}
