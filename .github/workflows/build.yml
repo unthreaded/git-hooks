@@ -1,6 +1,10 @@
 name: Git hooks Pipeline
 
-on: [push, pull_request, release, create]
+on:
+  push:
+  pull_request:
+  release:
+    types: [ published, created, released ]
 
 jobs:
   build:
