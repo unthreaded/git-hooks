@@ -10,13 +10,13 @@ from shutil import copy2 as copy
 import PyInstaller.__main__
 
 if __name__ == "__main__":
-    OS_PREFIX: str = platform.system().lower()
+    OS_ALIAS: str = platform.system().lower()
 
-    if OS_PREFIX == "darwin":
-        OS_PREFIX = "mac"
+    if OS_ALIAS == "darwin":
+        OS_ALIAS = "mac"
 
     EXE_NAME: str = "commit-msg"
-    EXE_FILE_FOLDER = os.path.join('dist', OS_PREFIX)
+    EXE_FILE_FOLDER = os.path.join('dist', OS_ALIAS)
 
     # Hidden import mends PyInstaller moduleNotFound errors
     PyInstaller.__main__.run([
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     ])
 
     # Remove file extension from executable
-    if OS_PREFIX == "windows":
+    if OS_ALIAS == "windows":
         FINAL_EXE_PATH = os.path.join(EXE_FILE_FOLDER, EXE_NAME)
         os.replace(FINAL_EXE_PATH + ".exe", FINAL_EXE_PATH)
 
@@ -46,4 +46,4 @@ if __name__ == "__main__":
 
     # Output a zip file with the configuration file + executable
     # For example, if we're running on Linux, Githooks_Linux.zip will be created in the current working directory
-    shutil.make_archive("Githooks_" + OS_PREFIX.capitalize(), 'zip', EXE_FILE_FOLDER)
+    shutil.make_archive("Githooks_" + OS_ALIAS.capitalize(), 'zip', EXE_FILE_FOLDER)
