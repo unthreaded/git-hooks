@@ -41,7 +41,7 @@ jobs:
       run: |
         python scripts/package.py $ZIP_FILE_NAME
       env:
-        - ZIP_FILE_NAME: ${{ runner.os }}
+        ZIP_FILE_NAME: ${{ runner.os }}
     - uses: actions/upload-artifact@master
       with:
         name: githooks
