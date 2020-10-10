@@ -47,8 +47,10 @@ if __name__ == "__main__":
     # Allow the CI to pass this in
     zip_file_name = sys.argv[1]
     zip_file_name = zip_file_name if zip_file_name else OS_ALIAS
+    zip_file_name = "Githooks_" + zip_file_name.capitalize()
 
     # Output a zip file with the configuration file + executable
     # For example, if we're running on Linux, Githooks_Linux.zip will be created
     # in the current working directory
-    shutil.make_archive("Githooks_" + zip_file_name.capitalize(), 'zip', EXE_FILE_FOLDER)
+    shutil.make_archive(zip_file_name, 'zip', EXE_FILE_FOLDER)
+    print("Wrote zip file: %s" % zip_file_name)
