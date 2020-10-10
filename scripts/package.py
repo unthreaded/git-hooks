@@ -45,5 +45,6 @@ if __name__ == "__main__":
          os.path.join(EXE_FILE_FOLDER, CONFIG_FILE_NAME))
 
     # Output a zip file with the configuration file + executable
-    # For example, if we're running on Linux, Githooks_Linux.zip will be created in the current working directory
+    # For example, if we're running on Linux, Githooks_Linux.zip will be created
+    # in the current working directory
     shutil.make_archive("Githooks_" + OS_ALIAS.capitalize(), 'zip', EXE_FILE_FOLDER)
