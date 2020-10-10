@@ -56,9 +56,15 @@ class TestYAMLImplCommitHookConfig(unittest.TestCase):
             msg="Found incorrect no issue phrase")
 
     def test_issue_url_prefix(self):
+        url = "https://github.com/unthreaded/git-hooks/issues/"
         self.assertEqual(
             self.sut.get_issue_url_format(),
-            'https://github.com/unthreaded/git-hooks/issues/',
+            url,
+            msg="Found incorrect issue URL format")
+
+        self.assertEqual(
+            self.sut.get_issue_url_format("PURPLE"),
+            url + "PURPLE",
             msg="Found incorrect issue URL format")
 
     def test_exception_raised_with_null_file(self):
