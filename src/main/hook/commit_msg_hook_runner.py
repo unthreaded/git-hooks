@@ -108,7 +108,7 @@ class CommitMessageHookRunner:
 
         if issue_in_branch:
             logging.info("Rewriting commit to use issue: %s%s",
-                         self.hook_config.get_issue_url_prefix(),
+                         self.hook_config.get_issue_url_format(),
                          issue_in_branch)
         else:
             issue_in_branch = self.hook_config.get_no_issue_phrase()

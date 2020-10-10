@@ -9,8 +9,8 @@ class CommitHookConfigDefaultImpl(CommitHookConfig):
         Default values for all configuration items
     """
 
-    def get_issue_url_prefix(self) -> str:
-        return "https://github.com/unthreaded/git-hooks/issues/"
+    def get_issue_url_format(self, ticket: str = "") -> str:
+        return 'https://github.com/unthreaded/git-hooks/issues/%s' % ticket
 
     def get_issue_pattern(self) -> str:
         return "GH-[0-9]+"

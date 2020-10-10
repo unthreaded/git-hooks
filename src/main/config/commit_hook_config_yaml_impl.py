@@ -18,7 +18,7 @@ class CommitHookConfigYAMLImpl(CommitHookConfig):
             Group YAML settings together
         """
         ISSUE_PATTERN_CONFIG: str = "issue_pattern"
-        ISSUE_URL_PREFIX: str = "issue_url_prefix"
+        ISSUE_URL_FORMAT: str = "issue_url_format"
         NO_ISSUE_PHRASE: str = "no_issue_phrase"
         PROTECTED_BRANCH_PREFIXES: str = "protected_branch_prefixes"
 
@@ -38,7 +38,7 @@ class CommitHookConfigYAMLImpl(CommitHookConfig):
             config_dict = yaml.safe_load(config_file)
             self.__issue_pattern = config_dict[self.YAMLKeys.ISSUE_PATTERN_CONFIG]
             self.__no_issue_phrase = config_dict[self.YAMLKeys.NO_ISSUE_PHRASE]
-            self.__issue_url_prefix = config_dict[self.YAMLKeys.ISSUE_URL_PREFIX]
+            self.__issue_url_prefix = config_dict[self.YAMLKeys.ISSUE_URL_FORMAT]
             self.__protected_branch_prefixes = \
                 config_dict[self.YAMLKeys.PROTECTED_BRANCH_PREFIXES]
 
@@ -56,5 +56,8 @@ class CommitHookConfigYAMLImpl(CommitHookConfig):
     def get_protected_branch_prefixes(self) -> list:
         return self.__protected_branch_prefixes
 
-    def get_issue_url_prefix(self) -> str:
-        return self.__issue_url_prefix
+    def get_issue_url_format(self, ticket: str = "") -> str:
+        return self.__issue_url_prefix.replace(
+            CommitHookConfig.ISSUE_PLACEHOLDER_IN_URL_FORMAT,
+            ticket
+        )
