@@ -3,6 +3,7 @@
 """
 import os
 import platform
+import shutil
 import sys
 from shutil import copy2 as copy
 
@@ -42,3 +43,7 @@ if __name__ == "__main__":
     # Save config with executable
     copy(os.path.join("src", "main", CONFIG_FILE_NAME),
          os.path.join(EXE_FILE_FOLDER, CONFIG_FILE_NAME))
+
+    # Output a zip file with the configuration file + executable
+    # For example, if we're running on Linux, Githooks_Linux.zip will be created in the current working directory
+    shutil.make_archive("Githooks_" + OS_PREFIX.capitalize(), 'zip', EXE_FILE_FOLDER)
