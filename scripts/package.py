@@ -44,7 +44,11 @@ if __name__ == "__main__":
     copy(os.path.join("src", "main", CONFIG_FILE_NAME),
          os.path.join(EXE_FILE_FOLDER, CONFIG_FILE_NAME))
 
+    # Allow the CI to pass this in
+    zip_file_name = sys.argv[1]
+    zip_file_name = zip_file_name if zip_file_name else OS_ALIAS
+
     # Output a zip file with the configuration file + executable
     # For example, if we're running on Linux, Githooks_Linux.zip will be created
     # in the current working directory
-    shutil.make_archive("Githooks_" + OS_ALIAS.capitalize(), 'zip', EXE_FILE_FOLDER)
+    shutil.make_archive("Githooks_" + zip_file_name.capitalize(), 'zip', EXE_FILE_FOLDER)

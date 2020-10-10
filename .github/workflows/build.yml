@@ -63,6 +63,7 @@ jobs:
       with:
         upload_url: 'https://uploads.github.com/repos/${{ github.repository }}/releases/${{ github.ref }}/'
         asset_path: ./*.zip
+        asset_name: blahblah
         asset_content_type: application/zip
     - uses: actions/setup-ruby@v1
     - name: Send Webhook Notification
