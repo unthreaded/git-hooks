@@ -67,9 +67,9 @@ jobs:
         UPLOAD_URL: 'https://uploads.github.com/repos/${{ github.repository }}/releases/${{ github.ref }}/'
       with:
         asset_content_type: application/zip
-        asset_name: {{ env.FILE_NAME }}
-        asset_path: {{ env.ASSET_PATH }}
-        upload_url: {{ env.UPLOAD_URL }}
+        asset_name: ${{ env.FILE_NAME }}
+        asset_path: ${{ env.ASSET_PATH }}
+        upload_url: ${{ env.UPLOAD_URL }}
     - uses: actions/setup-ruby@v1
     - name: Send Webhook Notification
       if: always()
