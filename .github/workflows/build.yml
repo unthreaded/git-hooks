@@ -63,14 +63,11 @@ jobs:
         # https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#triggering-new-workflows-using-a-personal-access-token
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         FILE_NAME: '${{ runner.os }}.zip'
-        ASSET_PATH: "./$FILE_NAME"
-        REPO: ${{ github.repository }}
-        REF: ${{ github.ref }}
-        UPLOAD_URL: "https://uploads.github.com/repos/$REPO/releases/$REF/"
+        UPLOAD_URL: 'https://uploads.github.com/repos/${{ github.repository }}/releases/${{ github.ref }}/'
       with:
         asset_content_type: application/zip
         asset_name: ${{ env.FILE_NAME }}
-        asset_path: ${{ env.ASSET_PATH }}
+        asset_path: ${{ env.FILE_NAME }}
         upload_url: ${{ env.UPLOAD_URL }}
     - uses: actions/setup-ruby@v1
     - name: Send Webhook Notification
