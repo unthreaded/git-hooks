@@ -54,18 +54,20 @@ jobs:
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN  -f coverage.xml
+    - name: Calculate Tag
+      id: calctag
+      run: |
+        echo "##[set-output name=tag;]$(python scripts/get_github_tag.py $GITHUB_REF)"
     - name: Upload Release
       if: github.event_name == 'release'
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
-      run: |
-        TAG=$(python scripts/get_github_tag.py $GITHUB_REF)
       env:
         # This is a personal access token so that we can trigger additional jobs
         # https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#triggering-new-workflows-using-a-personal-access-token
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         FILE_NAME: '${{ runner.os }}.zip'
-        UPLOAD_URL: 'https://uploads.github.com/repos/${{ github.repository }}/releases/${{ env.TAG }}/'
+        UPLOAD_URL: 'https://uploads.github.com/repos/${{ github.repository }}/releases/${{ steps.calctag.outputs.tag }}/'
       with:
         asset_content_type: application/zip
         asset_name: ${{ env.FILE_NAME }}
