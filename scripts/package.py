@@ -44,9 +44,8 @@ if __name__ == "__main__":
     copy(os.path.join("src", "main", CONFIG_FILE_NAME),
          os.path.join(EXE_FILE_FOLDER, CONFIG_FILE_NAME))
 
-    zip_file_name = OS_ALIAS.capitalize()
-
     # Output a zip file with the configuration file + executable
     # in the current working directory
+    zip_file_name = OS_ALIAS.capitalize()
     shutil.make_archive(zip_file_name, 'zip', EXE_FILE_FOLDER)
     print("Wrote zip file: %s" % zip_file_name)
