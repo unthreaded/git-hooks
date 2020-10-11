@@ -46,8 +46,7 @@ if __name__ == "__main__":
 
     # Allow the CI to pass this in
     zip_file_name = sys.argv[sys.argv.__len__() - 1]
-    zip_file_name = zip_file_name if zip_file_name else OS_ALIAS
-    zip_file_name = zip_file_name.capitalize()
+    zip_file_name = zip_file_name if zip_file_name else OS_ALIAS.capitalize()
 
     # Output a zip file with the configuration file + executable
     # in the current working directory
