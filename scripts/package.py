@@ -45,7 +45,7 @@ if __name__ == "__main__":
          os.path.join(EXE_FILE_FOLDER, CONFIG_FILE_NAME))
 
     # Allow the CI to pass this in
-    zip_file_name = sys.argv[1]
+    zip_file_name = sys.argv[sys.argv.__len__() - 1]
     zip_file_name = zip_file_name if zip_file_name else OS_ALIAS
     zip_file_name = zip_file_name.capitalize()
 
