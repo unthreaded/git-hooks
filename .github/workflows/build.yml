@@ -40,9 +40,6 @@ jobs:
     - name: Package
       run: |
         python scripts/package.py
-      shell: bash
-      env:
-        ZIP_FILE_NAME: ${{ runner.os }}
     - uses: actions/upload-artifact@master
       with:
         name: githooks

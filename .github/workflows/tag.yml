@@ -13,4 +13,6 @@ jobs:
         with:
           release_branch: master
         env:
+          # This is a personal access token so that we can trigger additional jobs
+          # https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#triggering-new-workflows-using-a-personal-access-token
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
