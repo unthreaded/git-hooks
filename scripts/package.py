@@ -44,9 +44,7 @@ if __name__ == "__main__":
     copy(os.path.join("src", "main", CONFIG_FILE_NAME),
          os.path.join(EXE_FILE_FOLDER, CONFIG_FILE_NAME))
 
-    # Allow the CI to pass this in
-    zip_file_name = sys.argv[sys.argv.__len__() - 1]
-    zip_file_name = zip_file_name if zip_file_name else OS_ALIAS.capitalize()
+    zip_file_name = OS_ALIAS.capitalize()
 
     # Output a zip file with the configuration file + executable
     # in the current working directory

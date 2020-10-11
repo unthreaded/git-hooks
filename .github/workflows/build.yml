@@ -39,7 +39,7 @@ jobs:
         pytest --doctest-modules --cov=src/main/ --cov-report=xml src/test
     - name: Package
       run: |
-        python scripts/package.py $ZIP_FILE_NAME
+        python scripts/package.py
       shell: bash
       env:
         ZIP_FILE_NAME: ${{ runner.os }}
@@ -60,7 +60,8 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: '${{ runner.os }}.zip'
+        file_glob: true
+        file: '*.zip'
         tag: ${{ github.ref }}
     - uses: actions/setup-ruby@v1
     - name: Send Webhook Notification
