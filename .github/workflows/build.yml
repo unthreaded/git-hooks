@@ -40,6 +40,7 @@ jobs:
     - name: Package
       run: |
         python scripts/package.py $ZIP_FILE_NAME
+      shell: bash
       env:
         ZIP_FILE_NAME: ${{ runner.os }}
     - uses: actions/upload-artifact@master
