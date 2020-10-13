@@ -62,7 +62,9 @@ jobs:
         tag: ${{ github.ref }}
     - uses: actions/setup-ruby@v1
     - name: Send Webhook Notification
-      if: always()
+      # On PRs from forks the secrets aren't included
+      # This prevents this step from failing
+      if: ${{ always() && secrets.WEBHOOK_URL != '' }}
       env:
         JOB_STATUS: ${{ job.status }}
         WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
