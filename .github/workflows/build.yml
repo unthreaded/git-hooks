@@ -64,7 +64,7 @@ jobs:
     - name: Send Webhook Notification
       # On PRs from forks the secrets aren't included
       # This prevents this step from failing
-      if: ${{ always() && secrets.WEBHOOK_URL != '' }}
+      if: ${{ always() && $WEBHOOK_URL != '' }}
       env:
         JOB_STATUS: ${{ job.status }}
         WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
