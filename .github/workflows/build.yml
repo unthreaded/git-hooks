@@ -62,16 +62,18 @@ jobs:
         tag: ${{ github.ref }}
     - uses: actions/setup-ruby@v1
     - name: Send Webhook Notification
-      # On PRs from forks the secrets aren't included
-      # This prevents this step from failing
-      if: ${{ always() && secrets != null }}
+      if: ${{ always() }}
       env:
         JOB_STATUS: ${{ job.status }}
         WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
         HOOK_OS_NAME: ${{ runner.os }}
         WORKFLOW_NAME: ${{ github.workflow }}
         WEBHOOK_REPO: ${{ secrets.WEBHOOK_REPO }}
+        # On PRs from forks the secrets aren't included
+        # The "test" commands prevents this step from failing
       run: |
+        test $WEBHOOK_REPO -ne "" || (echo Missing repo && exit 0)
+        test WEBHOOK_URL -ne "" || (echo Missing hook URL && exit 0)
         echo Status: $JOB_STATUS
         git clone $WEBHOOK_REPO webhook
         bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL
