@@ -71,9 +71,10 @@ jobs:
         WEBHOOK_REPO: ${{ secrets.WEBHOOK_REPO }}
         # On PRs from forks the secrets aren't included
         # The "test" commands prevents this step from failing
+        # -n checks for a non-zero length string
       run: |
-        test $WEBHOOK_REPO -ne "" || (echo Missing repo && exit 0)
-        test WEBHOOK_URL -ne "" || (echo Missing hook URL && exit 0)
+        test -n $WEBHOOK_REPO || (echo Missing repo && exit 0)
+        test -n WEBHOOK_URL || (echo Missing hook URL && exit 0)
         echo Status: $JOB_STATUS
         git clone $WEBHOOK_REPO webhook
         bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL
