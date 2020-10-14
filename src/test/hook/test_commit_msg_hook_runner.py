@@ -48,7 +48,7 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
         # Setup config information
         self.config.get_issue_pattern.return_value = "TICKET-[0-9]+"
         self.set_protected_branches([])
-        self.config.get_issue_url_prefix.return_value = "com.whatever/"
+        self.config.get_issue_url_format.return_value = "com.whatever/"
         self.config.get_no_issue_phrase.return_value = "NOTICKET"
 
         # Setup dummy git environment
