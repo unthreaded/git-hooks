@@ -73,9 +73,7 @@ jobs:
         # The "test" commands prevents this step from failing
         # -n checks for a non-zero length string
       run: |
-        test -n $WEBHOOK_REPO || (echo Missing repo && exit 0)
-        test -n WEBHOOK_URL || (echo Missing hook URL && exit 0)
         echo Status: $JOB_STATUS
-        git clone $WEBHOOK_REPO webhook
-        bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL
+        git clone $WEBHOOK_REPO webhook || (echo Missing repo && exit 0)
+        bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL || (echo Missing hook URL && exit 0)
       shell: bash
