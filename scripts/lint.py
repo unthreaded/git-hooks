@@ -30,6 +30,10 @@ def lint(ignore_rules: list, directories: list):
         sys.exit(exit_code)
 
 
+
+
+
+
 lint([TOO_FEW_PUBLIC_METHODS],
      [
          'src.main',
