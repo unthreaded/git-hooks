@@ -70,8 +70,7 @@ jobs:
         WORKFLOW_NAME: ${{ github.workflow }}
         WEBHOOK_REPO: ${{ secrets.WEBHOOK_REPO }}
         # On PRs from forks the secrets aren't included
-        # The "test" commands prevents this step from failing
-        # -n checks for a non-zero length string
+        # Thus the || error handling you see below
       run: |
         echo Status: $JOB_STATUS
         (git clone $WEBHOOK_REPO webhook || echo Missing repo) && exit 0
