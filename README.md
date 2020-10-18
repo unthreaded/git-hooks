@@ -62,3 +62,6 @@ Lastly, edit this config file to your liking:
     
 ## Development details
 For Mac, you must install some dependencies via brew. Simply run [`os_specific_requirements.py`](scripts/os_specific_requirements.py) and you'll be good to go!
+
+## Contributing
+[How to contribute](./CONTRIBUTING.md)

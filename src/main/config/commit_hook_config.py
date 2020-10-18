@@ -9,6 +9,13 @@ class CommitHookConfig(ABC):
         Interface of sorts for our overall configuration
     """
 
+    ISSUE_PLACEHOLDER_IN_URL_FORMAT: str = "${ISSUE}"
+    """
+       Implementations can reference this to know that the
+       configured issue url may contain this:
+       www.blah.com/${ISSUE}/whatever
+    """
+
     @abstractmethod
     def get_issue_pattern(self) -> str:
         """
@@ -29,7 +36,7 @@ class CommitHookConfig(ABC):
         """
 
     @abstractmethod
-    def get_issue_url_prefix(self) -> str:
+    def get_issue_url_format(self, ticket: str = "") -> str:
         """
             Returns the prefix to link to an issue
         """

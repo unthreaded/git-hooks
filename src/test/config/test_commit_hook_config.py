@@ -27,7 +27,7 @@ class TestBaseImplCommitHookConfig(unittest.TestCase):
         self.assertIsNotNone(self.sut.get_no_issue_phrase(), msg="Should return a no issue phrase")
 
     def test_issue_url_prefix(self):
-        self.assertIsNotNone(self.sut.get_issue_url_prefix(), msg="Should return issue URL prefix")
+        self.assertIsNotNone(self.sut.get_issue_url_format(), msg="Should return issue URL prefix")
 
 
 class TestINIImplCommitHookConfig(unittest.TestCase):
@@ -58,10 +58,16 @@ class TestINIImplCommitHookConfig(unittest.TestCase):
             msg="Found incorrect no issue phrase")
 
     def test_issue_url_prefix(self):
+        url = "https://github.com/unthreaded/git-hooks/issues/"
         self.assertEqual(
-            self.sut.get_issue_url_prefix(),
-            'https://github.com/unthreaded/git-hooks/issues/',
-            msg="Found incorrect issue URL prefix")
+            self.sut.get_issue_url_format(),
+            url,
+            msg="Found incorrect issue URL format")
+
+        self.assertEqual(
+            self.sut.get_issue_url_format("PURPLE"),
+            url + "PURPLE",
+            msg="Found incorrect issue URL format")
 
     def test_exception_raised_with_null_file(self):
         # We expect Exception class to be thrown when
