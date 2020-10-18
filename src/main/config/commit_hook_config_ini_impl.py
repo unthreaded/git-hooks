@@ -19,7 +19,7 @@ class CommitHookConfigINIImpl(CommitHookConfig):
             Group INI settings together
         """
         ISSUE_PATTERN_CONFIG: str = "issue_pattern"
-        ISSUE_URL_PREFIX: str = "issue_url_prefix"
+        ISSUE_URL_PREFIX: str = "issue_url_format"
         NO_ISSUE_PHRASE: str = "no_issue_phrase"
         PROTECTED_BRANCH_PREFIXES: str = "protected_branch_prefixes"
 
@@ -71,5 +71,8 @@ class CommitHookConfigINIImpl(CommitHookConfig):
     def get_protected_branch_prefixes(self) -> list:
         return self.__protected_branch_prefixes
 
-    def get_issue_url_prefix(self) -> str:
-        return self.__issue_url_prefix
+    def get_issue_url_format(self, ticket: str = "") -> str:
+        return self.__issue_url_prefix.replace(
+            CommitHookConfig.ISSUE_PLACEHOLDER_IN_URL_FORMAT,
+            ticket
+        )
