@@ -1,6 +1,10 @@
 name: Git hooks Pipeline
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  release:
+    types: [ published ]
 
 jobs:
   build:
@@ -48,6 +52,14 @@ jobs:
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN  -f coverage.xml
+    - name: Upload binaries to release
+      if: github.event_name == 'release'
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file_glob: true
+        file: '*.zip'
+        tag: ${{ github.ref }}
     - uses: actions/setup-ruby@v1
     - name: Send Webhook Notification
       if: always()
@@ -57,8 +69,10 @@ jobs:
         HOOK_OS_NAME: ${{ runner.os }}
         WORKFLOW_NAME: ${{ github.workflow }}
         WEBHOOK_REPO: ${{ secrets.WEBHOOK_REPO }}
+        # On PRs from forks the secrets aren't included
+        # Thus the || error handling you see below
       run: |
         echo Status: $JOB_STATUS
-        git clone $WEBHOOK_REPO webhook
-        bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL
+        (git clone $WEBHOOK_REPO webhook || echo Missing repo) && exit 0
+        (bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL || echo Missing hook URL) && exit 0
       shell: bash

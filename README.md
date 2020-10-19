@@ -1,6 +1,7 @@
 # git-hooks
 [![](https://github.com/unthreaded/git-hooks/workflows/Git%20hooks%20Pipeline/badge.svg)](https://github.com/unthreaded/git-hooks/actions?workflow=Git+hooks+Pipeline)
 &nbsp;&nbsp;[![codecov](https://codecov.io/gh/unthreaded/git-hooks/branch/master/graph/badge.svg)](https://codecov.io/gh/unthreaded/git-hooks)
+&nbsp;&nbsp;![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/unthreaded/git-hooks?label=Latest%20Version)
 
 ## What is git-hooks?
 Git hooks is a commit hook that works with git to make sure your issue, ticket, Jira, and story numbers make it to the commit message.
