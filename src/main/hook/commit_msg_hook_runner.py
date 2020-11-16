@@ -4,9 +4,8 @@
 import logging
 import os
 import re
+import subprocess
 from enum import Enum
-
-from pygit2 import Repository
 
 from src.main.config.commit_hook_config import CommitHookConfig
 
@@ -61,10 +60,11 @@ class CommitMessageHookRunner:
         """
         :return: Current branch checked out in repo
         """
-        repo = Repository(self.git_repo_path)
-        if repo.head_is_unborn or repo.head_is_detached:
-            return ""
-        return repo.head.name
+        branch_name = subprocess.check_output(
+            "git branch --show-current".split(),
+            cwd=self.git_repo_path
+        )
+        return branch_name.strip().decode("utf-8")
 
     def run(self) -> ExitCode:
         """

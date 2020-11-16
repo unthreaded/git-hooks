@@ -8,7 +8,7 @@ import sys
 
 from src.main.config.commit_hook_config import CommitHookConfig
 from src.main.config.commit_hook_config_base_impl import CommitHookConfigDefaultImpl
-from src.main.config.commit_hook_config_yaml_impl import CommitHookConfigYAMLImpl
+from src.main.config.commit_hook_config_ini_impl import CommitHookConfigINIImpl
 from src.main.hook.commit_msg_hook_runner import CommitMessageHookRunner, ExitCode
 
 NUM_PROD_ARGUMENTS_EXPECTED: int = 2
@@ -25,10 +25,10 @@ def get_config() -> CommitHookConfig:
     my_exe_path: str = sys.argv[0]
     my_exe_dir = os.path.dirname(my_exe_path)
     my_exe_dir = os.path.abspath(my_exe_dir)
-    config_file_path = os.path.join(my_exe_dir, CommitHookConfigYAMLImpl.CONFIG_FILE_NAME)
+    config_file_path = os.path.join(my_exe_dir, CommitHookConfigINIImpl.CONFIG_FILE_NAME)
 
     if os.path.isfile(config_file_path):
-        return CommitHookConfigYAMLImpl(
+        return CommitHookConfigINIImpl(
             open(
                 config_file_path,
                 'r')

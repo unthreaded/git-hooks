@@ -53,7 +53,7 @@ chmod +x ~/.githooks/commit-msg
 
 Lastly, edit this config file to your liking:
 
-    ~/.githooks/commit-msg-config.yml
+    ~/.githooks/commit-msg-config.ini
     
 ## If you run into issues
 * #### The hook is not being triggered

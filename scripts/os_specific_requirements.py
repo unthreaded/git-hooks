@@ -11,4 +11,4 @@ if __name__ == "__main__":
     print("OS: %s" % OS_PREFIX)
 
     if OS_PREFIX == "darwin":
-        os.system("brew install libgit2")
+        os.system("brew install upx")

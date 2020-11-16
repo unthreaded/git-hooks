@@ -5,11 +5,15 @@ import os
 import platform
 import shutil
 import sys
-from shutil import copy2 as copy
+from shutil import copy2 as copy, rmtree
 
 import PyInstaller.__main__
 
 if __name__ == "__main__":
+    # Clean up from previous build
+    rmtree('dist', ignore_errors=True)
+    rmtree('build', ignore_errors=True)
+
     OS_ALIAS: str = platform.system().lower()
 
     if OS_ALIAS == "darwin":
@@ -36,9 +40,9 @@ if __name__ == "__main__":
     # otherwise, we'll get:
     #   ValueError: attempted relative import beyond top-level package
     sys.path.append(".")
-    from src.main.config.commit_hook_config_yaml_impl import CommitHookConfigYAMLImpl
+    from src.main.config.commit_hook_config_ini_impl import CommitHookConfigINIImpl
 
-    CONFIG_FILE_NAME = CommitHookConfigYAMLImpl.CONFIG_FILE_NAME
+    CONFIG_FILE_NAME = CommitHookConfigINIImpl.CONFIG_FILE_NAME
 
     # Save config with executable
     copy(os.path.join("src", "main", CONFIG_FILE_NAME),

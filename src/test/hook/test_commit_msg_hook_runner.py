@@ -18,12 +18,6 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
     mock_logging: Mock
     SUT_PATCH: str = "src.main.hook.commit_msg_hook_runner"
 
-    def set_detached_head_flag(self, boolean: bool):
-        self.mock_repo.return_value.head_is_detached = boolean
-
-    def set_unborn_head_flag(self, boolean: bool):
-        self.mock_repo.return_value.head_is_unborn = boolean
-
     def set_protected_branches(self, branches: List[str]):
         self.config.get_protected_branch_prefixes.return_value = branches
 
@@ -40,10 +34,9 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
 
         self.mock_open = self.create_patch('builtins.open')
         self.mock_open.return_value = self.mock_commit_file
-        self.mock_repo = self.create_patch(self.SUT_PATCH + ".Repository")
+
+        self.mock_branch_name = self.create_patch(self.SUT_PATCH + ".subprocess.check_output")
         self.mock_logging = self.create_patch(self.SUT_PATCH + ".logging")
-        self.set_unborn_head_flag(False)
-        self.set_detached_head_flag(False)
 
         # Setup config information
         self.config.get_issue_pattern.return_value = "TICKET-[0-9]+"
@@ -62,7 +55,7 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
         self.mock_commit_file.read.return_value = message
 
     def set_branch_name(self, branch: str):
-        self.mock_repo.return_value.head.name = branch
+        self.mock_branch_name.return_value = bytes(branch, encoding="utf-8")
 
     def assert_n_calls_made_to_logging(self, num_calls: int):
         self.assertEqual(
@@ -152,14 +145,6 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
                           "Nothing should have been written to commit file")
 
         self.assert_n_calls_made_to_logging(1)
-
-    def test_detached_head_returns_empty_branch(self):
-        self.set_detached_head_flag(True)
-        self.assertEqual("", self.sut.get_current_branch_name())
-
-    def test_unborn_head_returns_empty_branch(self):
-        self.set_unborn_head_flag(True)
-        self.assertEqual("", self.sut.get_current_branch_name())
 
     def test_exit_failure_on_protected_branch(self):
         self.set_protected_branches(['master'])

@@ -13,7 +13,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
+        # We want the oldest possible version of MacOS for backwards comparability
+        os: [ubuntu-latest, macos-10.15, windows-latest]
 
     steps:
     - uses: actions/checkout@v1
