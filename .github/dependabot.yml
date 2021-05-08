@@ -7,10 +7,7 @@ updates:
   open-pull-requests-limit: 10
   reviewers:
   - tiemonl
+  - lcombs15
   labels:
   - Patch
   - dependencies
-  ignore:
-  - dependency-name: pylint
-    versions:
-    - 2.8.1
