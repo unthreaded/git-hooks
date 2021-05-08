@@ -122,5 +122,5 @@ class CommitMessageHookRunner:
         # Open file for write, which will empty the file contents
         with open(commit_msg_file_path, 'w') as commit_msg_file:
             commit_msg_file.write(commit_msg_text)
-        
+
         return ExitCode.SUCCESS
