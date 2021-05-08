@@ -120,7 +120,7 @@ class CommitMessageHookRunner:
         commit_msg_text = "%s: %s" % (issue_in_branch, raw_commit_msg_text)
 
         # Open file for write, which will empty the file contents
-        commit_msg_file = open(commit_msg_file_path, 'w')
-        commit_msg_file.write(commit_msg_text)
-        commit_msg_file.close()
+        with open(commit_msg_file_path, 'w') as commit_msg_file:
+            commit_msg_file.write(commit_msg_text)
+        
         return ExitCode.SUCCESS
