@@ -57,9 +57,8 @@ class TestIntegration(unittest.TestCase):
 
     def test_commit_message_is_edited(self):
         file_to_commit_path = "example.txt"
-        file_to_commit = open(file_to_commit_path, 'w')
-        file_to_commit.write("content here")
-        file_to_commit.close()
+        with open(file_to_commit_path, 'w') as file_to_commit:
+            file_to_commit.write("content here")
 
         # stage file
         os.system("git add " + file_to_commit_path)
