@@ -1,4 +1,4 @@
-PyInstaller==4.9
+PyInstaller==4.10
 pytest==6.2.5
 pylint==2.7.4
 codecov==2.1.12
