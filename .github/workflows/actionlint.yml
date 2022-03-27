@@ -13,5 +13,7 @@ jobs:
     container:
       image: rhysd/actionlint:latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: run
         run: actionlint
