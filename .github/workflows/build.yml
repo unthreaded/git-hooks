@@ -65,7 +65,7 @@ jobs:
         tag: ${{ github.ref }}
     - uses: actions/setup-ruby@v1
     - name: Send Webhook Notification
-      if: always()
+      if: failure()
       env:
         JOB_STATUS: ${{ job.status }}
         WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
