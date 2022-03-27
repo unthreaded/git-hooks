@@ -76,6 +76,6 @@ jobs:
         # Thus the || error handling you see below
       run: |
         echo Status: "$JOB_STATUS"
-        (git clone "$WEBHOOK_REPO" webhook || echo Missing repo) && exit 0
-        (bash webhook/send.sh "$JOB_STATUS" "$WEBHOOK_URL" || echo Missing hook URL) && exit 0
+        git clone "$WEBHOOK_REPO" webhook || (echo Missing repo && exit 1)
+        bash webhook/send.sh "$JOB_STATUS" "$WEBHOOK_URL" || (echo Missing hook URL && exit 1)
       shell: bash
