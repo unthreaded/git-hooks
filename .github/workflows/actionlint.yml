@@ -1,0 +1,19 @@
+name: "Github Action Lint"
+on:
+  pull_request:
+    paths:
+      - .github/**.yml
+
+# For more information on actionlint, visit:
+# https://github.com/rhysd/actionlint/blob/main/README.md
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install actionlint
+        run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+      - name: run
+        run: ./actionlint
