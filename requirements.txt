@@ -1,5 +1,5 @@
 PyInstaller==5.2
 pytest==7.1.2
-pylint==2.7.4
+pylint==2.14.5
 codecov==2.1.12
 pytest-cov==3.0.0
