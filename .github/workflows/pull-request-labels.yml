@@ -1,0 +1,20 @@
+name: Label checks
+
+on:
+  - pull_request
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Prepare Scripts
+      run: chmod +x scripts/*
+    - name: Run
+      run: python scripts/pr_label_check.py
+      shell: bash
