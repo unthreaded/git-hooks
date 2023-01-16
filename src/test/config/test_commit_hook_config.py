@@ -36,7 +36,9 @@ class TestINIImplCommitHookConfig(unittest.TestCase):
     def setUp(self):
         super().setUp()
         self.sut = CommitHookConfigINIImpl(
-            open(os.path.join("src", "main", CommitHookConfigINIImpl.CONFIG_FILE_NAME), 'r')
+            # pylint: disable=consider-using-with
+            open(os.path.join("src", "main", CommitHookConfigINIImpl.CONFIG_FILE_NAME),
+                 'r', encoding="utf8")
         )
 
     def test_protected_branch_prefixes(self):
