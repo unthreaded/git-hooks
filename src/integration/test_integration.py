@@ -57,9 +57,8 @@ class TestIntegration(unittest.TestCase):
 
     def test_commit_message_is_edited(self):
         file_to_commit_path = "example.txt"
-        file_to_commit = open(file_to_commit_path, 'w')
-        file_to_commit.write("content here")
-        file_to_commit.close()
+        with open(file_to_commit_path, 'w', encoding="utf8") as file_to_commit:
+            file_to_commit.write("content here")
 
         # stage file
         os.system("git add " + file_to_commit_path)
@@ -74,7 +73,7 @@ class TestIntegration(unittest.TestCase):
         # Give git a moment to switch branches
         time.sleep(2)
 
-        os.system('git commit -m "%s"' % commit_message)
+        os.system(f"git commit -m \"{commit_message}\"")
 
         # Give the hook N seconds to run
         time.sleep(5)
@@ -82,5 +81,5 @@ class TestIntegration(unittest.TestCase):
         # Save commit message after hook should have run
         commit_message_after_hook: str = os.popen("git log -n 1 --format=\"%s\"").read()
 
-        self.assertEqual(commit_message_after_hook.strip(), "GH-123: %s" % commit_message,
+        self.assertEqual(commit_message_after_hook.strip(), f"GH-123: {commit_message}",
                          "Commit message was not edited correctly")

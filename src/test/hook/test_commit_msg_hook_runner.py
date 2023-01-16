@@ -30,7 +30,7 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
         def write_to_commit_file(value: str):
             self.message_written_to_commit_file = value
 
-        self.mock_commit_file.write = Mock(side_effect=write_to_commit_file)
+        self.mock_commit_file.__enter__.return_value.write = Mock(side_effect=write_to_commit_file)
 
         self.mock_open = self.create_patch('builtins.open')
         self.mock_open.return_value = self.mock_commit_file
@@ -52,7 +52,7 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
         """)
 
     def set_commit_message(self, message: str):
-        self.mock_commit_file.read.return_value = message
+        self.mock_commit_file.__enter__.return_value.read.return_value = message
 
     def set_branch_name(self, branch: str):
         self.mock_branch_name.return_value = bytes(branch, encoding="utf-8")
@@ -68,7 +68,7 @@ class TestCommitMessageRunner(BaseUnitTest.BaseTestCase):
                                      "MERGE changes from release/V1.2"]
 
         for no_action_commit in no_action_commit_messages:
-            print("Testing this commit message: %s" % no_action_commit)
+            print(f"Testing this commit message: {no_action_commit}")
 
             self.set_commit_message(no_action_commit)
 

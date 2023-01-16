@@ -31,7 +31,7 @@ def get_config() -> CommitHookConfig:
         return CommitHookConfigINIImpl(
             open(
                 config_file_path,
-                'r')
+                'r', encoding="utf8")
         )
 
     logging.info(

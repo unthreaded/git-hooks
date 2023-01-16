@@ -26,8 +26,8 @@ if __name__ == "__main__":
     PyInstaller.__main__.run([
         "--onefile",
         "--hidden-import=_cffi_backend",
-        "--distpath=%s" % EXE_FILE_FOLDER,
-        "--name=%s" % EXE_NAME,
+        f"--distpath={EXE_FILE_FOLDER}",
+        f"--name={EXE_NAME}",
         os.path.join("src", "main", "commit_msg_hook.py"),
     ])
 
@@ -52,4 +52,4 @@ if __name__ == "__main__":
     # in the current working directory
     zip_file_name = OS_ALIAS.capitalize()
     shutil.make_archive(zip_file_name, 'zip', EXE_FILE_FOLDER)
-    print("Wrote zip file: %s" % zip_file_name)
+    print(f"Wrote zip file: {zip_file_name}")

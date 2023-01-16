@@ -72,12 +72,17 @@ class CommitMessageHookRunner:
         """
         issue_pattern: str = self.hook_config.get_issue_pattern()
         issue_or_no_issue_pattern: str = \
-            "%s|%s" % (issue_pattern, self.hook_config.get_no_issue_phrase())
+            f"{issue_pattern}|{self.hook_config.get_no_issue_phrase()}"
 
         branch_name: str = self.get_current_branch_name()
 
         commit_msg_file_path: str = os.path.join(self.git_repo_path, self.git_commit_message_path)
-        raw_commit_msg_text: str = open(commit_msg_file_path, 'r').read()
+
+        raw_commit_msg_text: str
+
+        with open(commit_msg_file_path, 'r', encoding="utf8") as commit_msg_file:
+            raw_commit_msg_text = commit_msg_file.read()
+
         commit_msg_text: str = raw_commit_msg_text.splitlines()[0]
 
         issue_in_branch: str = get_left_most_issue_in_string(issue_pattern, branch_name)
@@ -117,10 +122,9 @@ class CommitMessageHookRunner:
                 issue_in_branch,
                 branch_name)
 
-        commit_msg_text = "%s: %s" % (issue_in_branch, raw_commit_msg_text)
+        commit_msg_text = f"{issue_in_branch}: {raw_commit_msg_text}"
 
         # Open file for write, which will empty the file contents
-        commit_msg_file = open(commit_msg_file_path, 'w')
-        commit_msg_file.write(commit_msg_text)
-        commit_msg_file.close()
+        with open(commit_msg_file_path, 'w', encoding="utf8") as commit_msg_file:
+            commit_msg_file.write(commit_msg_text)
         return ExitCode.SUCCESS

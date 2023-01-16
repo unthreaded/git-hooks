@@ -10,7 +10,7 @@ class CommitHookConfigDefaultImpl(CommitHookConfig):
     """
 
     def get_issue_url_format(self, ticket: str = "") -> str:
-        return 'https://github.com/unthreaded/git-hooks/issues/%s' % ticket
+        return f"https://github.com/unthreaded/git-hooks/issues/{ticket}"
 
     def get_issue_pattern(self) -> str:
         return "GH-[0-9]+"

@@ -6,9 +6,6 @@ import sys
 
 DOCSTRING_REQUIREMENT = 'C0111'
 
-# This can create a problem when we don't use self.assert() in a unit test (Mocking, ext..)
-METHOD_COULD_BE_FUNCTION = 'R0201'
-
 TOO_FEW_PUBLIC_METHODS = 'R0903'
 
 
@@ -36,5 +33,5 @@ lint([TOO_FEW_PUBLIC_METHODS],
          'scripts'
      ])
 
-lint([DOCSTRING_REQUIREMENT, METHOD_COULD_BE_FUNCTION, TOO_FEW_PUBLIC_METHODS],
+lint([DOCSTRING_REQUIREMENT, TOO_FEW_PUBLIC_METHODS],
      ['src.test', 'src.integration'])
