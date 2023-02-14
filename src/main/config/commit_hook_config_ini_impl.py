@@ -59,7 +59,7 @@ class CommitHookConfigINIImpl(CommitHookConfig):
                               config_file.name if "name" in config_file else "unknown")
                 raise error_thrown
         else:
-            raise Exception("No configuration file found")
+            raise EOFError("No configuration file found")
         config_file.close()
 
     def get_issue_pattern(self) -> str:
