@@ -2,7 +2,7 @@ name: Tag
 
 on:
   pull_request:
-    types: closed
+    types: [closed]
 
 jobs:
   build:

@@ -16,14 +16,14 @@ jobs:
       fail-fast: false
       matrix:
         # We want the oldest possible version of MacOS for backwards compatibility 
-        os: [ubuntu-latest, macos-11, windows-latest]
+        os: [ubuntu-latest, macos-13, windows-latest]
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python 3.7
-      uses: actions/setup-python@v1
+    - uses: actions/checkout@v5
+    - name: Set up Python
+      uses: actions/setup-python@v5
       with:
-        python-version: 3.7
+        python-version: 3.13
     - name: Install dependencies
       run: |
         python scripts/os_specific_requirements.py
@@ -45,8 +45,8 @@ jobs:
         python scripts/package.py
     - uses: actions/upload-artifact@master
       with:
-        name: githooks
-        path: dist/
+        name: ${{ runner.os }}
+        path: ./dist/*
     - name: Integration
       run: |
         pytest src/integration
