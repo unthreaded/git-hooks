@@ -20,7 +20,7 @@ if __name__ == "__main__":
         OS_ALIAS = "mac"
 
     EXE_NAME: str = "commit-msg"
-    EXE_FILE_FOLDER = os.path.join('dist', OS_ALIAS)
+    EXE_FILE_FOLDER = 'dist'
 
     # Hidden import mends PyInstaller moduleNotFound errors
     PyInstaller.__main__.run([

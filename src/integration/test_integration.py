@@ -23,7 +23,7 @@ class TestIntegration(unittest.TestCase):
 
     def setUp(self):
         # Dist should only have one other folder in it - grab that one
-        self.abs_dist_path = os.path.join('dist', os.listdir('dist')[0])
+        self.abs_dist_path = 'dist'
 
         # Convert relative path to absolute
         self.abs_dist_path = os.path.abspath(self.abs_dist_path)

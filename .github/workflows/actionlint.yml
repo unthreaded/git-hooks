@@ -8,12 +8,14 @@ on:
 # https://github.com/rhysd/actionlint/blob/main/README.md
 
 jobs:
-  lint:
+  actionlint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Install actionlint
+      - uses: actions/checkout@v4
+      - name: Download actionlint
+        id: get_actionlint
         run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-      - name: run
-        run: ./actionlint
+        shell: bash
+      - name: Check workflow files
+        run: ${{ steps.get_actionlint.outputs.executable }} -color
+        shell: bash
