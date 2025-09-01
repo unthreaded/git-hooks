@@ -3,7 +3,6 @@
 """
 import os
 import platform
-import shutil
 import sys
 from shutil import copy2 as copy, rmtree
 
@@ -47,9 +46,3 @@ if __name__ == "__main__":
     # Save config with executable
     copy(os.path.join("src", "main", CONFIG_FILE_NAME),
          os.path.join(EXE_FILE_FOLDER, CONFIG_FILE_NAME))
-
-    # Output a zip file with the configuration file + executable
-    # in the current working directory
-    zip_file_name = OS_ALIAS.capitalize()
-    shutil.make_archive(zip_file_name, 'zip', EXE_FILE_FOLDER)
-    print(f"Wrote zip file: {zip_file_name}")

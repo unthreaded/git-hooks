@@ -51,6 +51,11 @@ On Linux & Mac, make the hook executable:
 chmod +x ~/.githooks/commit-msg
 ```
 
+On Mac you may run into a security warning. To resolve this:
+```shell
+xattr -rd com.apple.quarantine commit-msg
+```
+
 Lastly, edit this config file to your liking:
 
     ~/.githooks/commit-msg-config.ini
