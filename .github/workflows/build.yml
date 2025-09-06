@@ -16,66 +16,69 @@ jobs:
       fail-fast: false
       matrix:
         # We want the oldest possible version of MacOS for backwards compatibility 
-        os: [ubuntu-latest, macos-13, windows-latest]
+        os: [ ubuntu-latest, macos-13, windows-latest ]
 
     steps:
-    - uses: actions/checkout@v5
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.13
-    - name: Install dependencies
-      run: |
-        python scripts/os_specific_requirements.py
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-      shell: bash
-    - name: Prepare Scripts
-      run: |
-        chmod +x scripts/*
-    - name: Lint
-      run: |
-        python scripts/lint.py
-      shell: bash
-    - name: Test
-      run: |
-        pytest --doctest-modules --cov=src/main/ --cov-report=xml src/test
-    - name: Package
-      run: |
-        python scripts/package.py
-    - uses: actions/upload-artifact@master
-      with:
-        name: ${{ runner.os }}
-        path: ./dist/*
-    - name: Integration
-      run: |
-        pytest src/integration
-    - name: Upload code coverage to codecov
-      if: runner.os == 'Linux'
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      run: bash <(curl -s https://codecov.io/bash) -t "$CODECOV_TOKEN"  -f coverage.xml
-    - name: Upload binaries to release
-      if: github.event_name == 'release'
-      uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file_glob: true
-        file: '*.zip'
-        tag: ${{ github.ref }}
-    - uses: actions/setup-ruby@v1
-    - name: Send Webhook Notification
-      if: failure()
-      env:
-        JOB_STATUS: ${{ job.status }}
-        WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
-        HOOK_OS_NAME: ${{ runner.os }}
-        WORKFLOW_NAME: ${{ github.workflow }}
-        WEBHOOK_REPO: ${{ secrets.WEBHOOK_REPO }}
-        # On PRs from forks the secrets aren't included
-        # Thus the || error handling you see below
-      run: |
-        echo Status: "$JOB_STATUS"
-        git clone "$WEBHOOK_REPO" webhook || (echo Missing repo && exit 1)
-        bash webhook/send.sh "$JOB_STATUS" "$WEBHOOK_URL" || (echo Missing hook URL && exit 1)
-      shell: bash
+      - uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+      - name: Install dependencies
+        run: |
+          python scripts/os_specific_requirements.py
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+        shell: bash
+      - name: Prepare Scripts
+        run: |
+          chmod +x scripts/*
+      - name: Lint
+        run: |
+          python scripts/lint.py
+        shell: bash
+      - name: Test
+        run: |
+          pytest --doctest-modules --cov=src/main/ --cov-report=xml src/test
+      - name: Package
+        run: |
+          python scripts/build_executable.py
+      - uses: actions/upload-artifact@master
+        with:
+          name: ${{ runner.os }}
+          path: ./dist/*
+      - name: Integration
+        run: |
+          pytest src/integration
+      - name: Upload code coverage to codecov
+        if: runner.os == 'Linux'
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: bash <(curl -s https://codecov.io/bash) -t "$CODECOV_TOKEN"  -f coverage.xml
+      - name: Zip binaries for release
+        if: github.event_name == 'release'
+        run: python scripts/zip_release.py
+      - name: Upload binaries to release
+        if: github.event_name == 'release'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file_glob: true
+          file: '*.zip'
+          tag: ${{ github.ref }}
+      - uses: actions/setup-ruby@v1
+      - name: Send Webhook Notification
+        if: failure()
+        env:
+          JOB_STATUS: ${{ job.status }}
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          HOOK_OS_NAME: ${{ runner.os }}
+          WORKFLOW_NAME: ${{ github.workflow }}
+          WEBHOOK_REPO: ${{ secrets.WEBHOOK_REPO }}
+          # On PRs from forks the secrets aren't included
+          # Thus the || error handling you see below
+        run: |
+          echo Status: "$JOB_STATUS"
+          git clone "$WEBHOOK_REPO" webhook || (echo Missing repo && exit 1)
+          bash webhook/send.sh "$JOB_STATUS" "$WEBHOOK_URL" || (echo Missing hook URL && exit 1)
+        shell: bash

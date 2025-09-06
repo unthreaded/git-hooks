@@ -2,24 +2,19 @@
     Generate OS specific executable
 """
 import os
-import platform
 import sys
 from shutil import copy2 as copy, rmtree
 
 import PyInstaller.__main__
+
+from helpers import OS_ALIAS, EXE_FILE_FOLDER
 
 if __name__ == "__main__":
     # Clean up from previous build
     rmtree('dist', ignore_errors=True)
     rmtree('build', ignore_errors=True)
 
-    OS_ALIAS: str = platform.system().lower()
-
-    if OS_ALIAS == "darwin":
-        OS_ALIAS = "mac"
-
     EXE_NAME: str = "commit-msg"
-    EXE_FILE_FOLDER = 'dist'
 
     # Hidden import mends PyInstaller moduleNotFound errors
     PyInstaller.__main__.run([
