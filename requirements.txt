@@ -2,4 +2,4 @@ PyInstaller==6.15.0
 pytest==8.4.2
 pylint==3.3.8
 codecov==2.1.13
-pytest-cov==6.3.0
+pytest-cov==7.0.0
