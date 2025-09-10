@@ -1,0 +1,40 @@
+name: PR Label Check
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize, labeled, unlabeled]
+
+jobs:
+  validate-labels:
+    name: Validate release label
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR has exactly one release label
+        env:
+          # Comma-separated list of valid release labels
+          VALID_LABELS: Patch,Minor,Major,no-release
+        run: |
+          # Extract labels from event payload
+          labels=$(jq -r '.pull_request.labels[].name' < "$GITHUB_EVENT_PATH" | tr '\n' ',')
+          echo "All labels on PR: ${labels}"
+
+          # Convert VALID_LABELS into regex alternation
+          IFS=',' read -r -a valid_arr <<< "$VALID_LABELS"
+
+          count=0
+          for name in "${valid_arr[@]}"; do
+            if echo "$labels" | grep -qiE '(^|,)'"$name"'(,|$)'; then
+              count=$((count+1))
+              matched="$matched $name"
+            fi
+          done
+
+          echo "Matched release labels:${matched}"
+
+          if [ "$count" -eq 1 ]; then
+            echo "Success: exactly one release label present."
+            exit 0
+          fi
+
+          echo "::error::PR must contain exactly one of the release labels: $VALID_LABELS. Found $count among them. Other labels are allowed."
+          exit 1
