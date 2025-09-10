@@ -1,0 +1,17 @@
+name: PR Label Check
+
+on:
+  pull_request:
+    types: [opened, labeled, unlabeled]
+
+jobs:
+  validate-labels:
+    name: Validate release label
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-python
+      - name: Check PR has exactly one release label
+        run: |
+          python scripts/pr_label_check.py "$GITHUB_EVENT_PATH"
+        shell: bash

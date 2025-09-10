@@ -20,19 +20,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.13
+      - uses: ./.github/actions/setup-python
       - name: Install dependencies
         run: |
           python scripts/os_specific_requirements.py
           python -m pip install --upgrade pip
           pip install -r requirements.txt
         shell: bash
-      - name: Prepare Scripts
-        run: |
-          chmod +x scripts/*
       - name: Lint
         run: |
           python scripts/lint.py
