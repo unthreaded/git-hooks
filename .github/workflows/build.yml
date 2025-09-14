@@ -10,7 +10,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -21,37 +20,37 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/setup-python
+
       - name: Install dependencies
-        run: |
-          python scripts/os_specific_requirements.py
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-        shell: bash
+        run: pip install -r requirements.txt
+
       - name: Lint
-        run: |
-          python scripts/lint.py
-        shell: bash
+        run: python scripts/lint.py
+
       - name: Test
-        run: |
-          pytest --doctest-modules --cov=src/main/ --cov-report=xml src/test
+        run: pytest --doctest-modules --cov=src/main/ --cov-report=xml src/test
+
       - name: Package
-        run: |
-          python scripts/build_executable.py
+        run: python scripts/build_executable.py
+
       - uses: actions/upload-artifact@master
         with:
           name: ${{ runner.os }}
           path: ./dist/*
+
       - name: Integration
-        run: |
-          pytest src/integration
+        run: pytest src/integration
+
       - name: Upload code coverage to codecov
         if: runner.os == 'Linux'
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: bash <(curl -s https://codecov.io/bash) -t "$CODECOV_TOKEN"  -f coverage.xml
+
       - name: Zip binaries for release
         if: github.event_name == 'release'
         run: python scripts/zip_release.py
+
       - name: Upload binaries to release
         if: github.event_name == 'release'
         uses: svenstaro/upload-release-action@v2
@@ -60,6 +59,7 @@ jobs:
           file_glob: true
           file: '*.zip'
           tag: ${{ github.ref }}
+
       - uses: actions/setup-ruby@v1
       - name: Send Webhook Notification
         if: failure()

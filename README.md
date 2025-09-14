@@ -65,9 +65,6 @@ Lastly, edit this config file to your liking:
     * Check your [core.hooksPath](https://git-scm.com/docs/githooks) - this setting can be `--global` or by repository. Check this first.
 * #### The hook is having a runtime error
     * Please submit an issue with the terminal output you received [here](https://github.com/unthreaded/git-hooks/issues) with as much detail as possible.
-    
-## Development details
-For Mac, you must install some dependencies via brew. Simply run [`os_specific_requirements.py`](scripts/os_specific_requirements.py) and you'll be good to go!
 
 ## Contributing
 [How to contribute](./CONTRIBUTING.md)
