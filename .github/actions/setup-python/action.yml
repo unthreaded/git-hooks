@@ -1,0 +1,10 @@
+name: "Setup Python"
+description: "Setup the correct version of python"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.13
